@@ -27,16 +27,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.psnotes.ui.components.MiDesplegable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.screens.inicio.FirmaScreen
 import com.example.psnotes.ui.screens.inicio.MaterialesScreen
 import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
 import com.example.psnotes.ui.screens.inicio.Observaciones2Screen
 import com.example.psnotes.ui.screens.inicio.TrabajoScreen
+import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
 
 @Composable
 fun InicioScreen(paddingValues: PaddingValues) {
+    val clienteViewModel: ClienteViewModel = viewModel()
     // Estado para controlar qué vista mostrar en la parte inferior
     val selectedSection = remember { mutableStateOf("trabajo") }
     Column(
@@ -54,7 +56,7 @@ fun InicioScreen(paddingValues: PaddingValues) {
                 .border(width = 1.dp, color = colorScheme.onBackground)
                 .padding(horizontal = 10.dp)
         ) {
-            MiDesplegable()
+            //MiDesplegable(viewModel = clienteViewModel)
             Text("Información Principal", style = MaterialTheme.typography.titleMedium)
             Text("Detalles sobre la pantalla...", style = MaterialTheme.typography.bodyMedium)
         }

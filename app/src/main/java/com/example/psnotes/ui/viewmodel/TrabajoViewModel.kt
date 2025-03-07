@@ -1,4 +1,4 @@
-package com.example.psnotes.viewmodel
+package com.example.psnotes.ui.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
