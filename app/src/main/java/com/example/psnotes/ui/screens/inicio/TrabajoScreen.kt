@@ -17,8 +17,8 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -31,18 +31,20 @@ import com.example.psnotes.viewmodel.TrabajoViewModel
 @Composable
 fun TrabajoScreen() {
 
-    var viewModel: TrabajoViewModel = viewModel()
+    val viewModel: TrabajoViewModel = viewModel()
 
-    var counter by rememberSaveable { mutableIntStateOf(viewModel.counter.value) }
+    val tiempoTrabajado by viewModel.tiempoTrabajado.collectAsState()
     var trabajoRealizado by rememberSaveable { mutableStateOf(viewModel.trabajoRealizado.value) }
+    val precioEstimado by viewModel.precioEstimado.collectAsState()
+    val tarifaPorHora by viewModel.tarifaPorHora.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .border(1.dp, color = colorScheme.onBackground)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()
-                .border(3.dp, color = colorScheme.inversePrimary)
                 .padding(bottom = 5.dp),
             horizontalArrangement = Arrangement.Center)
         {
@@ -51,10 +53,22 @@ fun TrabajoScreen() {
 
         HorizontalDivider(thickness = 3.dp)
 
+        Text("Tarifa por hora (€)", style = typography.titleMedium)
+
+        TextField(
+            value = tarifaPorHora.takeIf { it != 0.0 }?.toString() ?: "",
+            onValueChange = { viewModel.setTarifa(it.toDoubleOrNull() ?: 0.0) },
+            placeholder = { Text("Introduce la tarifa") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        )
+
+        HorizontalDivider(thickness = 3.dp)
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .border(3.dp, color = colorScheme.inversePrimary),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -97,8 +111,7 @@ fun TrabajoScreen() {
             ) {
                 IconButton(
                     onClick = {
-                        if (counter > 0) counter -= 30 // Evitar que sea negativo
-                        viewModel.counter.value = counter // Guardar el estado en el ViewModel
+                        viewModel.decrementarTiempo()
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -106,15 +119,14 @@ fun TrabajoScreen() {
                     Text(text = "-", style = typography.titleMedium)
                 }
                 Text(
-                    text = "$counter min",
+                    text = "$tiempoTrabajado min",
                     style = typography.titleMedium,
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                 )
                 IconButton(
                     onClick = {
-                        counter += 30
-                        viewModel.counter.value = counter // Guardar el estado en el ViewModel
+                        viewModel.incrementarTiempo()
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -124,6 +136,28 @@ fun TrabajoScreen() {
             }
 
             HorizontalDivider()
+
+            Text(
+                modifier = Modifier.padding(vertical = 5.dp),
+                text = "Precio",
+                style = typography.titleMedium
+            )
+
+            // Cuadro con el número
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "$precioEstimado €",
+                    style = typography.titleMedium,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                )
+            }
         }
     }
 }

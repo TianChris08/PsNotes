@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Cable
+import androidx.compose.material.icons.filled.NoteAlt
+import androidx.compose.material.icons.filled.TextFormat
+import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.psnotes.ui.components.MiDesplegable
 import com.example.psnotes.ui.screens.inicio.FirmaScreen
 import com.example.psnotes.ui.screens.inicio.MaterialesScreen
 import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
@@ -50,9 +51,10 @@ fun InicioScreen(paddingValues: PaddingValues) {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.3f)
-                .border(width = 3.dp, color = colorScheme.onBackground)
+                .border(width = 1.dp, color = colorScheme.onBackground)
                 .padding(horizontal = 10.dp)
         ) {
+            MiDesplegable()
             Text("Información Principal", style = MaterialTheme.typography.titleMedium)
             Text("Detalles sobre la pantalla...", style = MaterialTheme.typography.bodyMedium)
         }
@@ -89,11 +91,11 @@ fun InicioScreen(paddingValues: PaddingValues) {
                 val shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
 
                 listOf(
-                    Icons.Default.Face to "trabajo",
-                    Icons.Default.Favorite to "materiales",
-                    Icons.Default.Home to "firma",
-                    Icons.Default.Search to "observaciones1",
-                    Icons.Default.Settings to "observaciones2"
+                    Icons.Filled.Work to "trabajo",
+                    Icons.Filled.Cable to "materiales",
+                    Icons.Filled.TextFormat to "firma",
+                    Icons.Filled.NoteAlt to "observaciones1",
+                    Icons.Outlined.NoteAlt to "observaciones2"
                 ).forEach { (icon, text) ->
                     FloatingActionButton(
                         onClick = { selectedSection.value = text },
