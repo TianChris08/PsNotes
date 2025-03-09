@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteRepository
+import com.example.psnotes.data.repository.DummyClienteDao
 import kotlinx.coroutines.launch
 
-class ClienteViewModel(private val clienteRepository: ClienteRepository) : ViewModel() {
+
+class ClienteViewModel(private val clienteRepository: ClienteRepository = ClienteRepository()) : ViewModel() {
 
     private val _clientes = mutableStateOf<List<Cliente>>(emptyList())
     val clientes: State<List<Cliente>> get() = _clientes

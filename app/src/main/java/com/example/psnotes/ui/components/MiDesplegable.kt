@@ -29,6 +29,7 @@ fun MiDesplegable(viewModel: ClienteViewModel) {
     val opciones = listOf("Opción 1", "Opción 2", "Opción 3")
 
     LaunchedEffect(Unit) {
+        println("Ejecutando obtenerClientes()")
         viewModel.obtenerClientes()
     }
 
@@ -62,11 +63,11 @@ fun MiDesplegable(viewModel: ClienteViewModel) {
         ) {
             clientes.forEach { cliente ->
                 DropdownMenuItem(
+                    text = { Text(cliente.nombreFiscal) },
                     onClick = {
-                        selectedOption = cliente.nombreComerial  // Establecer el nombre comercial seleccionado
+                        selectedOption = cliente.nombreFiscal  // Establecer el nombre comercial seleccionado
                         expanded = false  // Cerrar el menú
-                    },
-                    text = { Text(cliente.nombreComerial) }
+                    }
                 )
             }
         }

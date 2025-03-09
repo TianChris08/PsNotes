@@ -2,7 +2,7 @@ package com.example.psnotes.data.repository
 
 import com.example.psnotes.data.model.Cliente
 
-class ClienteRepository(private val clienteDao: ClienteDao) {
+class ClienteRepository(private val clienteDao: ClienteDao = DummyClienteDao) { //TEST DummyClienteDao
 
     // Función para insertar un cliente
     suspend fun insertarCliente(cliente: Cliente) {

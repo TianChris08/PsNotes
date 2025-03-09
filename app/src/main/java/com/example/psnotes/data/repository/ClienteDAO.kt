@@ -20,3 +20,12 @@ interface ClienteDao {
     @Query("DELETE FROM clientes WHERE id = :id")
     suspend fun eliminarCliente(id: Int)
 }
+
+
+//TEST OBJECT
+object DummyClienteDao : ClienteDao {
+    override suspend fun insertarCliente(cliente: Cliente) { /* No-op */ }
+    override suspend fun obtenerClientePorId(id: Int): Cliente? = null
+    override suspend fun obtenerTodosClientes(): List<Cliente> = emptyList()
+    override suspend fun eliminarCliente(id: Int) { /* No-op */ }
+}
