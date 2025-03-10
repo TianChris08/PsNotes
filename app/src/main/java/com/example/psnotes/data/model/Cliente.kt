@@ -8,6 +8,9 @@ data class Cliente(
     @PrimaryKey(autoGenerate = false)
     val id : String,
     val fiscalName: String,
-    val commercialName: String
+    val commercialName: String,
+    val telefono: String,
+    val correo: String,
+    //val notasTrabajo: ArrayList<NotasTrabajo>?
 
 )

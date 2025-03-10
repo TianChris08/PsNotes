@@ -50,7 +50,22 @@ class HomeViewModel(
         val cliente = Cliente(
             UUID.randomUUID().toString(),
             state.clienteFiscalName,
-            state.clienteCommercialName
+            state.clienteCommercialName,
+            state.clienteTelefono,
+            state.clienteCorreo
+        )
+        viewModelScope.launch {
+            dao.insertClient(cliente)
+        }
+    }
+
+    fun createClient(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String) {
+        val cliente = Cliente(
+            UUID.randomUUID().toString(),
+            nombreFiscal,
+            nombreComercial,
+            telefono,
+            correo
         )
         viewModelScope.launch {
             dao.insertClient(cliente)
