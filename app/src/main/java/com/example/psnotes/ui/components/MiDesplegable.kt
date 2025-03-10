@@ -16,11 +16,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.example.psnotes.ui.viewmodel.HomeViewModel
+import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MiDesplegable(viewModel: HomeViewModel) {
+fun MiDesplegable(viewModel: ClienteViewModel) {
     val clientes = viewModel.state.clientes
 
     var expanded by remember { mutableStateOf(false) }

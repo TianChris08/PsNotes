@@ -1,4 +1,4 @@
-package com.example.psnotes.ui.screens
+package com.example.psnotes.deleteLater
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.psnotes.ui.viewmodel.HomeViewModel
+import com.example.psnotes.ui.screens.ClienteItem
+import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
-
+/*CÓDICO DE REFERENCIA PARA TRABAJAR CON ROOM*/
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
+fun HomeScreen(viewModel: ClienteViewModel) {
     val state = viewModel.state
 
     Column(
@@ -49,9 +50,9 @@ fun HomeScreen(viewModel: HomeViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     onEdit = {
                         //viewModel.deleteCliente(it)
-                }, onDelete = {
+                    }, onDelete = {
                         viewModel.deleteCliente(it)
-                })
+                    })
             }
         }
     }

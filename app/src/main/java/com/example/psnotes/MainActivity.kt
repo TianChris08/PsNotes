@@ -15,10 +15,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.psnotes.data.database.ClienteDatabase
 import com.example.psnotes.ui.screens.BottomBar
-import com.example.psnotes.ui.screens.HomeScreen
+import com.example.psnotes.ui.screens.BuscarScreen
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
-import com.example.psnotes.ui.viewmodel.HomeViewModel
+import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -32,10 +32,10 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val db = Room.databaseBuilder(this, ClienteDatabase::class.java, "clientes_db2").build()
                 val dao = db.clienteDao
-                val viewModel by viewModels<HomeViewModel>(factoryProducer = {
+                val viewModel by viewModels<ClienteViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return HomeViewModel(dao) as T
+                            return ClienteViewModel(dao) as T
                         }
                     }
                 })
@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                             InicioScreen(paddingValues, viewModel)
                         }
                         composable("Buscar") {
-                            //InicioScreen(paddingValues, navController)
+                            BuscarScreen(paddingValues, navController)
                         }
                         composable("Favoritos") {
                             //InicioScreen(paddingValues, navController)
@@ -63,18 +63,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-
-
-                /*val db = Room.databaseBuilder(this, ClienteDatabase::class.java, "clientes_db").build()
-                val dao = db.clienteDao
-                val viewModel by viewModels<HomeViewModel>(factoryProducer = {
-                    object : ViewModelProvider.Factory {
-                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return HomeViewModel(dao) as T
-                        }
-                    }
-                })
-                HomeScreen(viewModel)*/
             }
         }
     }

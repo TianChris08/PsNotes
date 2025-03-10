@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
@@ -38,125 +39,129 @@ fun TrabajoScreen() {
     val precioEstimado by viewModel.precioEstimado.collectAsState()
     val tarifaPorHora by viewModel.tarifaPorHora.collectAsState()
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .border(1.dp, color = colorScheme.onBackground)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = 5.dp),
-            horizontalArrangement = Arrangement.Center)
-        {
-            Text("Trabajo", style = typography.titleLarge)
-        }
-
-        HorizontalDivider(thickness = 3.dp)
-
-        Text("Tarifa por hora (€)", style = typography.titleMedium)
-
-        TextField(
-            value = tarifaPorHora.takeIf { it != 0.0 }?.toString() ?: "",
-            onValueChange = { viewModel.setTarifa(it.toDoubleOrNull() ?: 0.0) },
-            placeholder = { Text("Introduce la tarifa") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-        )
-
-        HorizontalDivider(thickness = 3.dp)
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-
-        ) {
-            Text(
-                modifier = Modifier.padding(vertical = 5.dp),
-                text = "Trabajo realizado",
-                style = typography.titleMedium
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 5.dp),
+                horizontalArrangement = Arrangement.Center
             )
+            {
+                Text("Trabajo", style = typography.titleLarge)
+            }
+
+            HorizontalDivider(thickness = 3.dp)
+
+            Text("Tarifa por hora (€)", style = typography.titleMedium)
 
             TextField(
-                value = trabajoRealizado,
-                onValueChange = {
-                    trabajoRealizado = it
-                    viewModel.trabajoRealizado.value = it
-                },
+                value = tarifaPorHora.takeIf { it != 0.0 }?.toString() ?: "",
+                onValueChange = { viewModel.setTarifa(it.toDoubleOrNull() ?: 0.0) },
+                placeholder = { Text("Introduce la tarifa") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
-                    .heightIn(min = 100.dp)
-                    .border(
-                        width = 1.dp,
-                        color = colorScheme.primary,
-                        shape = RoundedCornerShape(8.dp)),
-                placeholder = { Text("Escribe aquí...") }
             )
 
-            Text(
-                modifier = Modifier.padding(vertical = 5.dp),
-                text = "Tiempo de trabajo realizado",
-                style = typography.titleMedium
-            )
+            HorizontalDivider(thickness = 3.dp)
 
-            // Cuadro con el número
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = {
-                        viewModel.decrementarTiempo()
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+
+                ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "Trabajo realizado",
+                    style = typography.titleMedium
+                )
+
+                TextField(
+                    value = trabajoRealizado,
+                    onValueChange = {
+                        trabajoRealizado = it
+                        viewModel.trabajoRealizado.value = it
                     },
                     modifier = Modifier
-                        .weight(1f)
-                ) {
-                    Text(text = "-", style = typography.titleMedium)
-                }
-                Text(
-                    text = "$tiempoTrabajado min",
-                    style = typography.titleMedium,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                        .heightIn(min = 100.dp)
+                        .border(
+                            width = 1.dp,
+                            color = colorScheme.primary,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                    placeholder = { Text("Escribe aquí...") }
                 )
-                IconButton(
-                    onClick = {
-                        viewModel.incrementarTiempo()
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    Text(text = "+", style = typography.titleMedium)
-                }
-            }
 
-            HorizontalDivider()
-
-            Text(
-                modifier = Modifier.padding(vertical = 5.dp),
-                text = "Precio",
-                style = typography.titleMedium
-            )
-
-            // Cuadro con el número
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
                 Text(
-                    text = "$precioEstimado €",
-                    style = typography.titleMedium,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "Tiempo de trabajo realizado",
+                    style = typography.titleMedium
                 )
+
+                // Cuadro con el número
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {
+                            viewModel.decrementarTiempo()
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text(text = "-", style = typography.titleMedium)
+                    }
+                    Text(
+                        text = "$tiempoTrabajado min",
+                        style = typography.titleMedium,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                    )
+                    IconButton(
+                        onClick = {
+                            viewModel.incrementarTiempo()
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text(text = "+", style = typography.titleMedium)
+                    }
+                }
+
+                HorizontalDivider()
+
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "Precio",
+                    style = typography.titleMedium
+                )
+
+                // Cuadro con el número
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$precioEstimado €",
+                        style = typography.titleMedium,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                    )
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 data class LineasNotas(
     @PrimaryKey(autoGenerate = true)
     private val id: Int,
-    val notasTrabajo: NotasTrabajo,
+    val notaTrabajo: NotaTrabajo,
     //val productos: ArrayList<Producto>,
     //val servicios: Servicios,
     val idNota: Int,
