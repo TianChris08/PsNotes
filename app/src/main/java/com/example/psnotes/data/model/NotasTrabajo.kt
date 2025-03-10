@@ -8,7 +8,7 @@ data class NotasTrabajo(
     @PrimaryKey(autoGenerate = true)
     private val id: Int,
     val personaContacto: String,
-    val cliente: Cliente?,
+    val cliente: ClienteEntity?,
     val lineasNotas: LineasNotas?,
     // val usuario: User,
     val notaCerradaEn: LocalDateTime?,
