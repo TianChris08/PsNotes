@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TrabajoViewModel : ViewModel() {
 
@@ -24,30 +25,35 @@ class TrabajoViewModel : ViewModel() {
     val tarifaPorHora: StateFlow<Double> = _tarifaPorHora.asStateFlow()
 
     fun setTarifa(nuevaTarifa: Double) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             _tarifaPorHora.value = nuevaTarifa
-            actualizarPrecio()
+            withContext(Dispatchers.Main) {
+                actualizarPrecio()
+            }
         }
     }
 
     fun incrementarTiempo() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             _tiempoTrabajado.update { it + 30 }
-            actualizarPrecio()
+            withContext(Dispatchers.Main) {
+                actualizarPrecio()
+            }
         }
     }
 
     fun decrementarTiempo() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             _tiempoTrabajado.update { if (it > 0) it - 30 else 0 }
-            actualizarPrecio()
+            withContext(Dispatchers.Main) {
+                actualizarPrecio()
+            }
         }
     }
 
     private fun actualizarPrecio() {
-        viewModelScope.launch(Dispatchers.Main) {
-            _precioEstimado.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
-        }
+        _precioEstimado.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
+
     }
 
 }

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteDAO
-import com.example.psnotes.ui.screens.HomeState
+import com.example.psnotes.ui.screens.ClienteState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import java.util.UUID
 class ClienteViewModel(
     private val dao: ClienteDAO
 ) : ViewModel() {
-    var state by mutableStateOf(HomeState())
+    var state by mutableStateOf(ClienteState())
         private set
 
     init {
@@ -30,17 +30,15 @@ class ClienteViewModel(
     }
 
     fun changeFiscalName(fiscalName:String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                clienteFiscalName = fiscalName
-            )
-        }
+        state = state.copy(
+            nombreFiscalCliente = fiscalName
+        )
     }
 
     fun changeCommercialName(commercialName:String) {
         viewModelScope.launch(Dispatchers.IO) {
             state = state.copy(
-                clienteCommercialName = commercialName
+                nombreComercialCliente = commercialName
             )
         }
     }
@@ -54,10 +52,10 @@ class ClienteViewModel(
     fun createClient() {
         val cliente = Cliente(
             UUID.randomUUID().toString(),
-            state.clienteFiscalName,
-            state.clienteCommercialName,
-            state.clienteTelefono,
-            state.clienteCorreo
+            state.nombreFiscalCliente,
+            state.nombreComercialCliente,
+            state.telefonoCliente,
+            state.correoCliente
         )
         viewModelScope.launch(Dispatchers.IO) {
             dao.insertClient(cliente)
@@ -76,5 +74,4 @@ class ClienteViewModel(
             dao.insertClient(cliente)
         }
     }
-
 }

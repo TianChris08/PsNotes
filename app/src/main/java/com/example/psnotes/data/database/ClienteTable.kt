@@ -6,6 +6,6 @@ import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteDAO
 
 @Database(entities = [Cliente::class], version = 1)
-abstract class ClienteDatabase : RoomDatabase() {
+abstract class ClienteTable : RoomDatabase() {
     abstract val clienteDao : ClienteDAO
 }

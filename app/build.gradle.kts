@@ -42,11 +42,17 @@ android {
 
 dependencies {
 
+    //Google Maps
+    implementation(libs.maps.compose)
+    implementation("com.google.android.gms:play-services-maps:19.1.0")
+
     // Extended Icons
     implementation("androidx.compose.material:material-icons-extended")
 
+    // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
     implementation(libs.androidx.runner)
     implementation(libs.androidx.appcompat)
     ksp("androidx.room:room-compiler:2.6.1")

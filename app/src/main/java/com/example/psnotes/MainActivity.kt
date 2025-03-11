@@ -6,6 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -13,12 +17,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
-import com.example.psnotes.data.database.ClienteDatabase
-import com.example.psnotes.ui.screens.BottomBar
-import com.example.psnotes.ui.screens.BuscarScreen
+import com.example.psnotes.data.database.ClienteTable
+import com.example.psnotes.data.database.TrabajadorTable
+import com.example.psnotes.ui.components.BottomBar
 import com.example.psnotes.ui.screens.InicioScreen
+import com.example.psnotes.ui.screens.InicioSesion
+import com.example.psnotes.ui.screens.MapScreen
+import com.example.psnotes.ui.screens.NotasScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -28,32 +36,59 @@ class MainActivity : ComponentActivity() {
         setContent {
             PsNotesTheme {
                 val context = LocalContext.current
-                context.deleteDatabase("clientes_db")
+                //context.deleteDatabase("trabajadores_db")
+
+                val dbTrabajadores = Room.databaseBuilder(this, TrabajadorTable::class.java, "trabajadores_db").build()
+                val trabajadorDao = dbTrabajadores.trabajadorDAO
+                val viewModelTrabajador by viewModels<TrabajadorViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return TrabajadorViewModel(trabajadorDao) as T
+                        }
+                    }
+                })
+
                 val navController = rememberNavController()
-                val db = Room.databaseBuilder(this, ClienteDatabase::class.java, "clientes_db2").build()
+                val db = Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db2").build()
                 val dao = db.clienteDao
-                val viewModel by viewModels<ClienteViewModel>(factoryProducer = {
+                val viewModelCliente by viewModels<ClienteViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
                             return ClienteViewModel(dao) as T
                         }
                     }
                 })
+
+                var currentRoute by remember { mutableStateOf("InicioSesion") }
+
+                /*LaunchedEffect(navController) {
+                    navController.addOnDestinationChangedListener { _, destination, _ ->
+                        currentRoute = destination.route ?: "InicioSesion"
+                    }
+                }*/
+
                 Scaffold(
-                    bottomBar = { BottomBar(navController) }
+                    bottomBar = {
+                        //if (currentRoute != "InicioSesion") {
+                            BottomBar(navController)
+                        //}
+                    }
                 ) { paddingValues ->
                     NavHost(
                         navController = navController,
-                        startDestination = "inicio",
+                        startDestination = "Inicio",
                     ) {
+                        composable("InicioSesion") {
+                            InicioSesion(paddingValues, viewModelTrabajador, navController)
+                        }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModel)
+                            InicioScreen(paddingValues, viewModelCliente)
                         }
                         composable("Buscar") {
-                            BuscarScreen(paddingValues, navController)
+                            MapScreen(paddingValues, navController)
                         }
-                        composable("Favoritos") {
-                            //InicioScreen(paddingValues, navController)
+                        composable("Notas") {
+                            NotasScreen(paddingValues, navController)
                         }
                         composable("Perfil") {
                             //InicioScreen(paddingValues, navController)

@@ -2,7 +2,6 @@ package com.example.psnotes.data.model
 
 import android.media.Image
 import androidx.room.PrimaryKey
-import java.time.LocalDateTime
 
 data class NotaTrabajo(
     @PrimaryKey(autoGenerate = true)
@@ -10,9 +9,9 @@ data class NotaTrabajo(
     val personaContacto: String,
     val cliente: Cliente?,
     val lineasNotas: LineasNotas?,
-    // val usuario: User,
-    val notaCerradaEn: LocalDateTime?,
-    val fecha: LocalDateTime?,
+    val trabajador: Trabajador,
+    val notaCerradaEn: String?, //Convertir a fecha luego
+    val fecha: String?, //Convertir a fecha luego
     val observacionesPublias: String?,
     val observacionesPrivadas: String?,
     val firma: Image?

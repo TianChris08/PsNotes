@@ -30,12 +30,12 @@ fun HomeScreen(viewModel: ClienteViewModel) {
     ) {
         Text(text = "Mis clientes", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
         TextField(
-            value = state.clienteFiscalName,
+            value = state.nombreFiscalCliente,
             onValueChange = { viewModel.changeFiscalName(it) },
             placeholder = { Text(text = "Nombre fiscal del cliente") }
         )
         TextField(
-            value = state.clienteCommercialName,
+            value = state.nombreComercialCliente,
             onValueChange = { viewModel.changeCommercialName(it) },
             placeholder = { Text(text = "Nombre comercial del cliente") }
         )
