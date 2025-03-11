@@ -8,18 +8,19 @@ import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteDAO
 import com.example.psnotes.ui.screens.HomeState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class HomeViewModel(
+class ClienteViewModel(
     private val dao: ClienteDAO
 ) : ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dao.getClients().collectLatest {
                 state = state.copy(
                     clientes = it
@@ -29,19 +30,23 @@ class HomeViewModel(
     }
 
     fun changeFiscalName(fiscalName:String) {
-        state = state.copy(
-            clienteFiscalName = fiscalName
-        )
+        viewModelScope.launch(Dispatchers.IO) {
+            state = state.copy(
+                clienteFiscalName = fiscalName
+            )
+        }
     }
 
     fun changeCommercialName(commercialName:String) {
-        state = state.copy(
-            clienteCommercialName = commercialName
-        )
+        viewModelScope.launch(Dispatchers.IO) {
+            state = state.copy(
+                clienteCommercialName = commercialName
+            )
+        }
     }
 
     fun deleteCliente(cliente: Cliente) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dao.deleteClient(cliente)
         }
     }
@@ -50,9 +55,24 @@ class HomeViewModel(
         val cliente = Cliente(
             UUID.randomUUID().toString(),
             state.clienteFiscalName,
-            state.clienteCommercialName
+            state.clienteCommercialName,
+            state.clienteTelefono,
+            state.clienteCorreo
         )
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.insertClient(cliente)
+        }
+    }
+
+    fun createClient(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String) {
+        val cliente = Cliente(
+            UUID.randomUUID().toString(),
+            nombreFiscal,
+            nombreComercial,
+            telefono,
+            correo
+        )
+        viewModelScope.launch(Dispatchers.IO) {
             dao.insertClient(cliente)
         }
     }

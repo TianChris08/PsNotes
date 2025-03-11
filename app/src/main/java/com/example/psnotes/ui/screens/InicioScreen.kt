@@ -1,11 +1,47 @@
 package com.example.psnotes.ui.screens
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cable
+import androidx.compose.material.icons.filled.NoteAlt
+import androidx.compose.material.icons.filled.TextFormat
+import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.outlined.NoteAlt
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.psnotes.ui.components.MiDesplegable
+import com.example.psnotes.ui.screens.inicio.FirmaScreen
+import com.example.psnotes.ui.screens.inicio.MaterialesScreen
+import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
+import com.example.psnotes.ui.screens.inicio.Observaciones2Screen
+import com.example.psnotes.ui.screens.inicio.TrabajoScreen
+import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
-/*@Composable
-fun InicioScreen(paddingValues: PaddingValues) {
-    val mainViewModel: MainViewModel = viewModel()
+@Composable
+fun InicioScreen(paddingValues: PaddingValues, viewModel: ClienteViewModel) {
     // Estado para controlar qué vista mostrar en la parte inferior
     val selectedSection = remember { mutableStateOf("trabajo") }
+    val showDialog = remember { mutableStateOf(false) } // Estado para mostrar el diálogo
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -21,9 +57,23 @@ fun InicioScreen(paddingValues: PaddingValues) {
                 .border(width = 1.dp, color = colorScheme.onBackground)
                 .padding(horizontal = 10.dp)
         ) {
-            //MiDesplegable(viewModel = mainViewModel)
             Text("Información Principal", style = MaterialTheme.typography.titleMedium)
-            Text("Detalles sobre la pantalla...", style = MaterialTheme.typography.bodyMedium)
+            HorizontalDivider()
+            MiDesplegable(viewModel = viewModel)
+            IconButton(
+                onClick = {
+                    showDialog.value = true
+                },
+            ) { Text(text = "+") }
+        }
+
+        if (showDialog.value) {
+            NuevoClienteForm (
+                onDismiss = { showDialog.value = false },
+                onConfirm = { f1, f2, f3, f4 ->
+                    viewModel.createClient(f1, f2, f3, f4)
+                }
+            )
         }
 
 
@@ -76,4 +126,4 @@ fun InicioScreen(paddingValues: PaddingValues) {
             }
         }
     }
-}*/
+}

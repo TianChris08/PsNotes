@@ -2,10 +2,13 @@ package com.example.psnotes.ui.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class TrabajoViewModel : ViewModel() {
 
@@ -21,22 +24,30 @@ class TrabajoViewModel : ViewModel() {
     val tarifaPorHora: StateFlow<Double> = _tarifaPorHora.asStateFlow()
 
     fun setTarifa(nuevaTarifa: Double) {
-        _tarifaPorHora.value = nuevaTarifa
-        actualizarPrecio()
+        viewModelScope.launch(Dispatchers.Main) {
+            _tarifaPorHora.value = nuevaTarifa
+            actualizarPrecio()
+        }
     }
 
     fun incrementarTiempo() {
-        _tiempoTrabajado.update { it + 30 }
-        actualizarPrecio()
+        viewModelScope.launch(Dispatchers.Main) {
+            _tiempoTrabajado.update { it + 30 }
+            actualizarPrecio()
+        }
     }
 
     fun decrementarTiempo() {
-        _tiempoTrabajado.update { if (it > 0) it - 30 else 0 }
-        actualizarPrecio()
+        viewModelScope.launch(Dispatchers.Main) {
+            _tiempoTrabajado.update { if (it > 0) it - 30 else 0 }
+            actualizarPrecio()
+        }
     }
 
     private fun actualizarPrecio() {
-        _precioEstimado.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
+        viewModelScope.launch(Dispatchers.Main) {
+            _precioEstimado.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
+        }
     }
 
 }

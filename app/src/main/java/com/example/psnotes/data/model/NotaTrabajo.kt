@@ -4,11 +4,11 @@ import android.media.Image
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
-data class NotasTrabajo(
+data class NotaTrabajo(
     @PrimaryKey(autoGenerate = true)
     private val id: Int,
     val personaContacto: String,
-    val cliente: ClienteEntity?,
+    val cliente: Cliente?,
     val lineasNotas: LineasNotas?,
     // val usuario: User,
     val notaCerradaEn: LocalDateTime?,
