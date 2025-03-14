@@ -15,6 +15,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -37,7 +38,7 @@ fun TrabajoScreen() {
     val tiempoTrabajado by viewModel.tiempoTrabajado.collectAsState()
     var trabajoRealizado by rememberSaveable { mutableStateOf(viewModel.trabajoRealizado.value) }
     val precioEstimado by viewModel.precioEstimado.collectAsState()
-    val tarifaPorHora by viewModel.tarifaPorHora.collectAsState()
+    var tarifaPorHora = viewModel.tarifaPorHora.collectAsState().value
 
     LazyColumn(
         modifier = Modifier
@@ -56,15 +57,21 @@ fun TrabajoScreen() {
 
             HorizontalDivider(thickness = 3.dp)
 
-            Text("Tarifa por hora (€)", style = typography.titleMedium)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Tarifa por hora (€):", style = typography.titleMedium)
+                Text(text = String.format("%.2f €", tarifaPorHora), style = typography.titleMedium)
+            }
 
-            TextField(
-                value = tarifaPorHora.takeIf { it != 0.0 }?.toString() ?: "",
-                onValueChange = { viewModel.setTarifa(it.toDoubleOrNull() ?: 0.0) },
-                placeholder = { Text("Introduce la tarifa") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
+            Slider(
+                value = tarifaPorHora.toFloat(),
+                onValueChange = { viewModel.setTarifa(it.toDouble()) },
+                valueRange = 0f..100f,
+                steps = 99,
+                modifier = Modifier.fillMaxWidth()
             )
 
             HorizontalDivider(thickness = 3.dp)

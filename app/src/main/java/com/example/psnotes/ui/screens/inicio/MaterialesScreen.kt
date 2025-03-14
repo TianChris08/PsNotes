@@ -25,8 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 
 @Composable
-fun MaterialesScreen() {
-    val viewModel: MaterialViewModel = viewModel()
+fun MaterialesScreen(viewModel: MaterialViewModel) {
+    //val viewModel: MaterialViewModel = viewModel()
 
     val cantidadMateriales by rememberSaveable { mutableStateOf(0) }
 
@@ -35,7 +35,7 @@ fun MaterialesScreen() {
     val precioEstimado by viewModel.precioEstimado.collectAsState()
     val tarifaPorHora by viewModel.tarifaPorHora.collectAsState()*/
 
-    LazyColumn(
+   LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .border(1.dp, color = colorScheme.onBackground)
@@ -47,13 +47,8 @@ fun MaterialesScreen() {
                 horizontalArrangement = Arrangement.Center
             )
             {
-                Text("Trabajo", style = typography.titleLarge)
+                Text("Materiales", style = typography.titleLarge)
             }
-
-            HorizontalDivider(thickness = 3.dp)
-
-            Text("Tarifa por hora (€)", style = typography.titleMedium)
-
 
             HorizontalDivider(thickness = 3.dp)
 
@@ -65,7 +60,7 @@ fun MaterialesScreen() {
                 ) {
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = "Trabajo realizado",
+                    text = "Materiales utilizados",
                     style = typography.titleMedium
                 )
 
@@ -103,7 +98,7 @@ fun MaterialesScreen() {
                 ) {
                     IconButton(
                         onClick = {
-                            viewModel.decrementarTiempo()
+                            viewModel.decrementarCantidad()
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -111,14 +106,14 @@ fun MaterialesScreen() {
                         Text(text = "-", style = typography.titleMedium)
                     }
                     Text(
-                        text = "$cantidadMateriales min",
+                        text = "$cantidadMateriales",
                         style = typography.titleMedium,
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                     )
                     IconButton(
                         onClick = {
-                            viewModel.incrementarTiempo()
+                            viewModel.incrementarCantidad()
                         },
                         modifier = Modifier
                             .weight(1f)

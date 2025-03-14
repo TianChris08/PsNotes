@@ -9,13 +9,12 @@ import java.time.LocalDateTime
 data class MaterialState(
     val materiales: List<Material> = emptyList(),
     val nombreMaterial: String = "",
-    val tipoMaterial: TipoMaterial? = null,
+    val tipoMaterial: String = "",
     val categoriaMaterial: String = "",
-    val cantidadMaterial: Int? = null,
-    val precioUnitarioMaterial: Double? = null,
+    val cantidadMaterial: Int? = 0,
+    val precioUnitarioMaterial: Double? = 0.0,
     val especificacionesMaterial: String = "",
-    val fechaExpiracionMaterial: LocalDateTime? = null,
-    val estadoMaterial: Estado? = null,
-    val idMaterial : String? = null,
-
-    )
+    val fechaExpiracionMaterial: String? = "",
+    val estadoMaterial: String? = "",
+    val idMaterial : String? = "",
+)

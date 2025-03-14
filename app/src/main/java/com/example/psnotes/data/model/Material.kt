@@ -8,13 +8,13 @@ data class Material(
     @PrimaryKey(autoGenerate = false)
     val id: String,
     val nombre: String,
-    val tipo: TipoMaterial?,
+    val tipo: String?,
     val categoria: String?,
     val cantidad: Int?,
     val precioUnitario: Double?,
     val especificaciones: String?,
     val fechaExpiracion: String? = null,
-    val estado: Estado?
+    val estado: String?
 )
     //val notasTrabajo: ArrayList<NotasTrabajo>?
 

@@ -1,8 +1,13 @@
 package com.example.psnotes.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -15,50 +20,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MiDesplegable(viewModel: ClienteViewModel) {
     val clientes = viewModel.state.clientes
 
     var expanded by remember { mutableStateOf(false) }
-    val selectedOption by remember { mutableStateOf("Selecciona un cliente") }
+    var selectedOption by remember { mutableStateOf("Selecciona un cliente") }
 
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = it
-        },
-    ) {
-        TextField(
-            value = selectedOption,
-            onValueChange = {},
-            readOnly = true, // Evita edición manual
-            label = { Text("Selecciona una opción") },
-            trailingIcon = {
-                IconButton(onClick = { }) {
-                    Icon(
-                        Icons.Default.ArrowDropDown,
-                        contentDescription = "Abrir menú",
-                        Modifier.clickable { expanded = !expanded }
+    Box() {
+        Column() {
+            Button(onClick = { expanded = !expanded }) {
+                Text(selectedOption)
+                Icon(Icons.Default.ArrowDropDown, contentDescription = "Abrir menú")
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                clientes.forEach { cliente ->
+                    DropdownMenuItem(
+                        text = { Text(cliente.commercialName) },
+                        onClick = {
+                            selectedOption = cliente.commercialName
+                            expanded = false
+                        }
                     )
                 }
-            },
-            modifier = Modifier.menuAnchor() // Asegura que el menú se alinee correctamente
-        )
-
-        // Menú desplegable con los clientes
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            clientes.forEach { cliente ->
-                DropdownMenuItem(
-                    text = { Text(cliente.commercialName) },
-                    onClick = { expanded = false }
-                )
             }
         }
     }

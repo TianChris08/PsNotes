@@ -1,5 +1,6 @@
 package com.example.psnotes.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,14 +41,12 @@ class MaterialViewModel(
     }
 
     fun changeNombreMaterial(nombreMaterial:String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                nombreMaterial = nombreMaterial
-            )
+        viewModelScope.launch(Dispatchers.Main) {
+            state = state.copy(nombreMaterial = nombreMaterial )
         }
     }
 
-    fun changeTipoMaterial(tipoMaterial: TipoMaterial) {
+    fun changeTipoMaterial(tipoMaterial: String) {
         viewModelScope.launch(Dispatchers.IO) {
             state = state.copy(
                 tipoMaterial = tipoMaterial
@@ -87,7 +86,7 @@ class MaterialViewModel(
         }
     }
 
-    fun changeFechaExpiracionMaterial(fechaExpiracion: LocalDateTime) {
+    fun changeFechaExpiracionMaterial(fechaExpiracion: String) {
         viewModelScope.launch(Dispatchers.IO) {
             state = state.copy(
                 fechaExpiracionMaterial = fechaExpiracion
@@ -95,7 +94,7 @@ class MaterialViewModel(
         }
     }
 
-    fun changeEstadoMaterial(estado: Estado) {
+    fun changeEstadoMaterial(estado: String) {
         viewModelScope.launch(Dispatchers.IO) {
             state = state.copy(
                 estadoMaterial = estado
@@ -109,30 +108,17 @@ class MaterialViewModel(
         }
     }
 
-    fun incrementarTiempo() {
+    fun incrementarCantidad() {
         viewModelScope.launch(Dispatchers.Main) {
             _cantidadMaterial.update { it + 1 }
-            /*withContext(Dispatchers.Main) {
-                actualizarCantidad()
-            }*/
         }
     }
 
-    fun decrementarTiempo() {
+    fun decrementarCantidad() {
         viewModelScope.launch(Dispatchers.Main) {
             _cantidadMaterial.update { if (it > 0) it - 1 else 0 }
-            /*withContext(Dispatchers.Main) {
-                actualizarCantidad()
-            }*/
         }
     }
-
-    /*private fun actualizarCantidad() {
-        viewModelScope.launch(Dispatchers.Main) {
-            //cambiar esta linea al implementar
-            _precioEstimado.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
-        }
-    }*/
 
     fun createMaterial() {
         val material = Material(
@@ -147,19 +133,23 @@ class MaterialViewModel(
             state.estadoMaterial
         )
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insertMaterial(material)
+            try {
+                dao.insertMaterial(material)
+            } catch (e: Exception) {
+                Log.e("MaterialViewModel", "Error al insertar material: ${e.localizedMessage}")
+            }
         }
     }
 
     fun createMaterial(
         nombre: String,
-        tipo: TipoMaterial,
+        tipo: String?,
         categoria: String,
         cantidad: Int,
         precioUnitario: Double,
         especificaciones: String,
-        fechaExpiracion: LocalDateTime,
-        estado: Estado
+        fechaExpiracion: String,
+        estado: String
     ) {
         val material = Material(
             UUID.randomUUID().toString(),

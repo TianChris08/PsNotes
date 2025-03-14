@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.psnotes.data.database.ClienteTable
+import com.example.psnotes.data.database.MaterialTable
 import com.example.psnotes.data.database.TrabajadorTable
 import com.example.psnotes.ui.components.BottomBar
 import com.example.psnotes.ui.screens.InicioScreen
@@ -26,6 +27,7 @@ import com.example.psnotes.ui.screens.MapScreen
 import com.example.psnotes.ui.screens.NotasScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 
 
@@ -44,6 +46,16 @@ class MainActivity : ComponentActivity() {
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
                             return TrabajadorViewModel(trabajadorDao) as T
+                        }
+                    }
+                })
+
+                val dbMateriales = Room.databaseBuilder(this, MaterialTable::class.java, "materiales_db").build()
+                val materialDao = dbMateriales.materialDao
+                val viewModelMaterial by viewModels<MaterialViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return MaterialViewModel(dao = materialDao) as T
                         }
                     }
                 })
@@ -82,7 +94,7 @@ class MainActivity : ComponentActivity() {
                             InicioSesion(paddingValues, viewModelTrabajador, navController)
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelCliente)
+                            InicioScreen(paddingValues, viewModelCliente, viewModelMaterial)
                         }
                         composable("Buscar") {
                             MapScreen(paddingValues, navController)

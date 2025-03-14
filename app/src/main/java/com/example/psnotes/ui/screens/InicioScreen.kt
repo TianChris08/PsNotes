@@ -1,5 +1,6 @@
 package com.example.psnotes.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.filled.Cable
 import androidx.compose.material.icons.filled.NoteAlt
 import androidx.compose.material.icons.filled.TextFormat
 import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -36,9 +38,14 @@ import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
 import com.example.psnotes.ui.screens.inicio.Observaciones2Screen
 import com.example.psnotes.ui.screens.inicio.TrabajoScreen
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.MaterialViewModel
 
 @Composable
-fun InicioScreen(paddingValues: PaddingValues, viewModel: ClienteViewModel) {
+fun InicioScreen(
+    paddingValues: PaddingValues,
+    viewModel: ClienteViewModel,
+    viewModelMaterial: MaterialViewModel
+) {
     // Estado para controlar qué vista mostrar en la parte inferior
     val selectedSection = remember { mutableStateOf("trabajo") }
     val showDialog = remember { mutableStateOf(false) } // Estado para mostrar el diálogo
@@ -48,25 +55,32 @@ fun InicioScreen(paddingValues: PaddingValues, viewModel: ClienteViewModel) {
             .padding(paddingValues),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-
         // 🔹 Parte Superior - Información fija
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.3f)
                 .border(width = 1.dp, color = colorScheme.onBackground)
-                .padding(horizontal = 10.dp)
         ) {
             Text("Información Principal", style = MaterialTheme.typography.titleMedium)
             HorizontalDivider()
-            MiDesplegable(viewModel = viewModel)
-            IconButton(
-                onClick = {
-                    showDialog.value = true
-                },
-            ) { Text(text = "+") }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                MiDesplegable(viewModel = viewModel)
+                IconButton(
+                    onClick = {
+                        showDialog.value = true
+                    },
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .background(colorScheme.onBackground)
+                ) { Icon(Icons.Outlined.Add, contentDescription = "Agregar trabajo", tint = colorScheme.background) }
+            }
         }
-
         if (showDialog.value) {
             NuevoClienteForm (
                 onDismiss = { showDialog.value = false },
@@ -75,7 +89,6 @@ fun InicioScreen(paddingValues: PaddingValues, viewModel: ClienteViewModel) {
                 }
             )
         }
-
 
         // 🔹 Parte Inferior - Contenido Dinámico
         Row(
@@ -91,7 +104,7 @@ fun InicioScreen(paddingValues: PaddingValues, viewModel: ClienteViewModel) {
             ) {
                 when (selectedSection.value) {
                     "trabajo" -> TrabajoScreen()
-                    "materiales" -> MaterialesScreen()
+                    "materiales" -> MaterialesScreen(viewModelMaterial)
                     "firma" -> FirmaScreen()
                     "observaciones1" -> Observaciones1Screen()
                     "observaciones2" -> Observaciones2Screen()

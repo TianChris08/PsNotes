@@ -19,4 +19,7 @@ interface ClienteDAO {
 
     @Delete
     suspend fun deleteClient(cliente: Cliente)
+
+    @Query("SELECT * FROM Cliente")
+    suspend fun getClientsOnce(): List<Cliente>
 }

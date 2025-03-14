@@ -12,57 +12,71 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
+import java.util.regex.Pattern
 
 class ClienteViewModel(
     private val dao: ClienteDAO
 ) : ViewModel() {
+
     var state by mutableStateOf(ClienteState())
         private set
 
+    var mensajeError by mutableStateOf<String?>(null)
+        private set
+
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            dao.getClients().collectLatest {
-                state = state.copy(
-                    clientes = it
-                )
+        viewModelScope.launch {
+            try {
+                dao.getClients().collectLatest { cliente ->
+                    state = state.copy(clientes = cliente)
+                }
+            } catch (e: Exception) {
+                mensajeError = "Error al cargar clientes: ${e.message}"
             }
         }
     }
 
     fun changeFiscalName(fiscalName:String) {
-        state = state.copy(
-            nombreFiscalCliente = fiscalName
-        )
+        state = state.copy(nombreFiscalCliente = fiscalName)
+
     }
 
     fun changeCommercialName(commercialName:String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                nombreComercialCliente = commercialName
-            )
-        }
+        state = state.copy(nombreComercialCliente = commercialName)
     }
 
     fun deleteCliente(cliente: Cliente) {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.deleteClient(cliente)
+            try {
+                dao.deleteClient(cliente)
+            } catch (e: Exception) {
+                mensajeError = "Error al eliminar clientes: ${e.message}"
+            }
         }
     }
 
     fun createClient() {
-        val cliente = Cliente(
-            UUID.randomUUID().toString(),
+        createClient(
             state.nombreFiscalCliente,
             state.nombreComercialCliente,
             state.telefonoCliente,
             state.correoCliente
         )
+        /*val cliente = Cliente(
+            UUID.randomUUID().toString(),
+            state.clienteFiscalName,
+            state.clienteCommercialName,
+            state.clienteTelefono,
+            state.clienteCorreo
+        )
         viewModelScope.launch(Dispatchers.IO) {
             dao.insertClient(cliente)
-        }
+        }*/
     }
 
     fun createClient(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String) {
+        if (!validarDatos(nombreFiscal, nombreComercial, telefono, correo)) return
+
         val cliente = Cliente(
             UUID.randomUUID().toString(),
             nombreFiscal,
@@ -70,8 +84,49 @@ class ClienteViewModel(
             telefono,
             correo
         )
+
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insertClient(cliente)
+            try {
+                dao.insertClient(cliente)
+            } catch (e: Exception) {
+                mensajeError = "Error al crear cliente: ${e.message}"
+            }
         }
     }
+
+    private fun validarDatos(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String): Boolean {
+        return when {
+            nombreFiscal.isBlank() -> {
+                mensajeError = "El nombre fiscal no puede estar vacío"
+                false
+            }
+            nombreComercial.isBlank() -> {
+                mensajeError = "El nombre comercial no puede estar vacío"
+                false
+            }
+            !validarTelefono(telefono) -> {
+                mensajeError = "Número de teléfono inválido"
+                false
+            }
+            !validarCorreo(correo) -> {
+                mensajeError = "Correo electrónico inválido"
+                false
+            }
+            else -> {
+                mensajeError = null // No hay errores
+                true
+            }
+        }
+    }
+
+    private fun validarTelefono(telefono: String): Boolean {
+        val regexTelefono = "^\\+?\\d{9,15}$"
+        return Pattern.matches(regexTelefono, telefono)
+    }
+
+    private fun validarCorreo(correo: String): Boolean {
+        val regexCorreo = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+        return Pattern.matches(regexCorreo, correo)
+    }
+
 }
