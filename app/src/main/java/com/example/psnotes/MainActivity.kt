@@ -6,10 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -27,9 +23,7 @@ import com.example.psnotes.ui.screens.MapScreen
 import com.example.psnotes.ui.screens.NotasScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
-import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,10 +31,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PsNotesTheme {
-                val context = LocalContext.current
+                LocalContext.current
                 //context.deleteDatabase("trabajadores_db")
 
-                val dbTrabajadores = Room.databaseBuilder(this, TrabajadorTable::class.java, "trabajadores_db").build()
+                val dbTrabajadores =
+                    Room.databaseBuilder(this, TrabajadorTable::class.java, "trabajadores_db")
+                        .build()
                 val trabajadorDao = dbTrabajadores.trabajadorDAO
                 val viewModelTrabajador by viewModels<TrabajadorViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
@@ -50,18 +46,13 @@ class MainActivity : ComponentActivity() {
                     }
                 })
 
-                val dbMateriales = Room.databaseBuilder(this, MaterialTable::class.java, "materiales_db").build()
-                val materialDao = dbMateriales.materialDao
-                val viewModelMaterial by viewModels<MaterialViewModel>(factoryProducer = {
-                    object : ViewModelProvider.Factory {
-                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return MaterialViewModel(dao = materialDao) as T
-                        }
-                    }
-                })
+                val dbMateriales =
+                    Room.databaseBuilder(this, MaterialTable::class.java, "materiales_db").build()
+                dbMateriales.materialDao
 
                 val navController = rememberNavController()
-                val db = Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db2").build()
+                val db =
+                    Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db2").build()
                 val dao = db.clienteDao
                 val viewModelCliente by viewModels<ClienteViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
@@ -70,8 +61,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 })
-
-                var currentRoute by remember { mutableStateOf("InicioSesion") }
 
                 /*LaunchedEffect(navController) {
                     navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -82,10 +71,9 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
                         //if (currentRoute != "InicioSesion") {
-                            BottomBar(navController)
+                        BottomBar(navController)
                         //}
-                    }
-                ) { paddingValues ->
+                    }) { paddingValues ->
                     NavHost(
                         navController = navController,
                         startDestination = "Inicio",
@@ -94,7 +82,7 @@ class MainActivity : ComponentActivity() {
                             InicioSesion(paddingValues, viewModelTrabajador, navController)
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelCliente, viewModelMaterial)
+                            InicioScreen(paddingValues, viewModelCliente)
                         }
                         composable("Buscar") {
                             MapScreen(paddingValues, navController)

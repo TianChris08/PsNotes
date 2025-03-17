@@ -23,10 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
+import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
 @Composable
-fun MaterialesScreen(viewModel: MaterialViewModel) {
-    //val viewModel: MaterialViewModel = viewModel()
+fun MaterialesScreen() {
+
+    val viewModel: TrabajoViewModel = viewModel()
 
     val cantidadMateriales by rememberSaveable { mutableStateOf(0) }
 
@@ -98,7 +100,7 @@ fun MaterialesScreen(viewModel: MaterialViewModel) {
                 ) {
                     IconButton(
                         onClick = {
-                            viewModel.decrementarCantidad()
+                            //viewModel.decrementarCantidad()
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -113,7 +115,7 @@ fun MaterialesScreen(viewModel: MaterialViewModel) {
                     )
                     IconButton(
                         onClick = {
-                            viewModel.incrementarCantidad()
+                            //viewModel.incrementarCantidad()
                         },
                         modifier = Modifier
                             .weight(1f)

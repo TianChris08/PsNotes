@@ -42,9 +42,14 @@ android {
 
 dependencies {
 
-    //Google Maps
+    // Google Maps Compose
     implementation(libs.maps.compose)
+
+    //Google Maps API
     implementation("com.google.android.gms:play-services-maps:19.1.0")
+
+    //Google Places API
+    implementation("com.google.android.libraries.places:places:4.1.0")
 
     // Extended Icons
     implementation("androidx.compose.material:material-icons-extended")
@@ -76,4 +81,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation("androidx.compose.ui:ui:1.5.0") // Reemplaza con la última versión
+    implementation("androidx.compose.material:material:1.5.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.0") // Necesario para LiveData con Compose
 }
