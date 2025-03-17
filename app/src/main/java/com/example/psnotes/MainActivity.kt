@@ -31,12 +31,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PsNotesTheme {
-                LocalContext.current
-                //context.deleteDatabase("trabajadores_db")
+                val context = LocalContext.current
+                val navController = rememberNavController()
 
-                val dbTrabajadores =
-                    Room.databaseBuilder(this, TrabajadorTable::class.java, "trabajadores_db")
-                        .build()
+                //context.deleteDatabase("clientes_db2")
+
+                // BASE DE DATOS TRABAJADORES
+                val dbTrabajadores = Room.databaseBuilder(this, TrabajadorTable::class.java, "trabajadores_db").build()
                 val trabajadorDao = dbTrabajadores.trabajadorDAO
                 val viewModelTrabajador by viewModels<TrabajadorViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
@@ -46,13 +47,12 @@ class MainActivity : ComponentActivity() {
                     }
                 })
 
-                val dbMateriales =
-                    Room.databaseBuilder(this, MaterialTable::class.java, "materiales_db").build()
-                dbMateriales.materialDao
+                // BASE DE DATOS MATERIALES(TODO)
+                val dbMateriales = Room.databaseBuilder(this, MaterialTable::class.java, "materiales_db").build()
+                val MaterialesDao = dbMateriales.materialDao
 
-                val navController = rememberNavController()
-                val db =
-                    Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db2").build()
+                // BASE DE DATOS DE CLIENTES
+                val db = Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db").build()
                 val dao = db.clienteDao
                 val viewModelCliente by viewModels<ClienteViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
@@ -61,12 +61,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 })
-
-                /*LaunchedEffect(navController) {
-                    navController.addOnDestinationChangedListener { _, destination, _ ->
-                        currentRoute = destination.route ?: "InicioSesion"
-                    }
-                }*/
 
                 Scaffold(
                     bottomBar = {
@@ -85,16 +79,16 @@ class MainActivity : ComponentActivity() {
                             InicioScreen(paddingValues, viewModelCliente)
                         }
                         composable("Buscar") {
-                            MapScreen(paddingValues, navController)
+                            MapScreen(paddingValues, context, dao)
                         }
                         composable("Notas") {
                             NotasScreen(paddingValues, navController)
                         }
                         composable("Perfil") {
-                            //InicioScreen(paddingValues, navController)
+                            //PerfilScreen(paddingValues, navController)
                         }
                         composable("Ajustes") {
-                            //InicioScreen(paddingValues, navController)
+                            //AjustesScreen(paddingValues, navController)
                         }
                     }
                 }

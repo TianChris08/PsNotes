@@ -18,10 +18,12 @@ class ClienteViewModel(
     private val dao: ClienteDAO
 ) : ViewModel() {
 
+    val erroresValidacion = mutableMapOf<String, String?>()
+
     var state by mutableStateOf(ClienteState())
         private set
 
-    var mensajeError by mutableStateOf<String?>(null)
+    var errorGeneral by mutableStateOf<String?>(null)
         private set
 
     init {
@@ -31,7 +33,7 @@ class ClienteViewModel(
                     state = state.copy(clientes = cliente)
                 }
             } catch (e: Exception) {
-                mensajeError = "Error al cargar clientes: ${e.message}"
+                errorGeneral = "Error al cargar clientes: ${e.message}"
             }
         }
     }
@@ -50,9 +52,18 @@ class ClienteViewModel(
             try {
                 dao.deleteClient(cliente)
             } catch (e: Exception) {
-                mensajeError = "Error al eliminar clientes: ${e.message}"
+                errorGeneral = "Error al eliminar clientes: ${e.message}"
             }
         }
+    }
+
+    fun createClientWithoutStore() {
+        createClientWithoutStore(
+            state.nombreFiscalCliente,
+            state.nombreComercialCliente,
+            state.telefonoCliente,
+            state.correoCliente,
+        )
     }
 
     fun createClient() {
@@ -60,22 +71,36 @@ class ClienteViewModel(
             state.nombreFiscalCliente,
             state.nombreComercialCliente,
             state.telefonoCliente,
-            state.correoCliente
+            state.correoCliente,
+            state.coordenadasNegocio
         )
-        /*val cliente = Cliente(
-            UUID.randomUUID().toString(),
-            state.clienteFiscalName,
-            state.clienteCommercialName,
-            state.clienteTelefono,
-            state.clienteCorreo
-        )
-        viewModelScope.launch(Dispatchers.IO) {
-            dao.insertClient(cliente)
-        }*/
     }
 
-    fun createClient(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String) {
-        if (!validarDatos(nombreFiscal, nombreComercial, telefono, correo)) return
+    fun createClient(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String, coordenadasNegocio: String?): MutableMap<String, String?>? {
+        if (!validarDatos(nombreFiscal, nombreComercial, telefono, correo)) return erroresValidacion
+
+        val cliente = Cliente(
+            UUID.randomUUID().toString(),
+            nombreFiscal,
+            nombreComercial,
+            telefono,
+            correo,
+            coordenadasNegocio
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                dao.insertClient(cliente)
+            } catch (e: Exception) {
+                errorGeneral = "Error al crear cliente: ${e.message}"
+            }
+        }
+
+        return null
+    }
+
+    fun createClientWithoutStore(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String): MutableMap<String, String?>? {
+        if (!validarDatos(nombreFiscal, nombreComercial, telefono, correo)) return erroresValidacion
 
         val cliente = Cliente(
             UUID.randomUUID().toString(),
@@ -89,33 +114,42 @@ class ClienteViewModel(
             try {
                 dao.insertClient(cliente)
             } catch (e: Exception) {
-                mensajeError = "Error al crear cliente: ${e.message}"
+                errorGeneral = "Error al crear cliente: ${e.message}"
             }
         }
+
+        return null
     }
 
     private fun validarDatos(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String): Boolean {
+        erroresValidacion.clear() // Limpiar errores previos
+
         return when {
             nombreFiscal.isBlank() -> {
-                mensajeError = "El nombre fiscal no puede estar vacío"
+                erroresValidacion["nombreFiscalBlank"] = "El nombre fiscal no puede estar vacío"
                 false
             }
             nombreComercial.isBlank() -> {
-                mensajeError = "El nombre comercial no puede estar vacío"
+                erroresValidacion["nombreComercialBlank"] = "El nombre comercial no puede estar vacío"
+                false
+            }
+            telefono.isBlank() -> {
+                erroresValidacion["telefonoBlank"] = "El telefono no puede estar vacío"
+                false
+            }
+            correo.isBlank() -> {
+                erroresValidacion["correoBlank"] = "El correo electrónico no puede estar vacío"
                 false
             }
             !validarTelefono(telefono) -> {
-                mensajeError = "Número de teléfono inválido"
+                erroresValidacion["telefonoValid"] = "Número de teléfono inválido"
                 false
             }
             !validarCorreo(correo) -> {
-                mensajeError = "Correo electrónico inválido"
+                erroresValidacion["correoValid"] = "Correo electrónico inválido"
                 false
             }
-            else -> {
-                mensajeError = null // No hay errores
-                true
-            }
+            else -> true
         }
     }
 

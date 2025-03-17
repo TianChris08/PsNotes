@@ -17,9 +17,9 @@ interface ClienteDAO {
     @Query("SELECT * FROM Cliente")
     fun getClients() : Flow<List<Cliente>>
 
-    @Delete
-    suspend fun deleteClient(cliente: Cliente)
-
     @Query("SELECT * FROM Cliente")
     suspend fun getClientsOnce(): List<Cliente>
+
+    @Delete
+    suspend fun deleteClient(cliente: Cliente)
 }

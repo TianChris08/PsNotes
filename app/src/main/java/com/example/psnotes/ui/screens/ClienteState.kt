@@ -8,6 +8,7 @@ data class ClienteState(
     val nombreComercialCliente: String = "",
     val telefonoCliente: String = "",
     val correoCliente: String = "",
+    val coordenadasNegocio: String? = "",
     val idCliente: String? = null
 
 )

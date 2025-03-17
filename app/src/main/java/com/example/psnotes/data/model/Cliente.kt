@@ -11,6 +11,7 @@ data class Cliente(
     val commercialName: String,
     val telefono: String,
     val correo: String,
+    val coordenadasNegocio: String? = null
     //val notasTrabajo: ArrayList<NotasTrabajo>?
 
 )

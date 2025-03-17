@@ -82,7 +82,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.compose.ui:ui:1.5.0") // Reemplaza con la última versión
+    implementation("androidx.compose.ui:ui:1.7.8") // Reemplaza con la última versión
     implementation("androidx.compose.material:material:1.5.0")
-    implementation("androidx.compose.runtime:runtime-livedata:1.5.0") // Necesario para LiveData con Compose
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.8") // Necesario para LiveData con Compose
 }

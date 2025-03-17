@@ -51,172 +51,133 @@ import com.google.android.libraries.places.api.Places
 @Composable
 fun InicioScreen(
     paddingValues: PaddingValues,
-    viewModel: ClienteViewModel,
+    clienteViewModel: ClienteViewModel
 ) {
     val context = LocalContext.current
+
     val permissionViewModel: PermissionViewModel = viewModel()
+    val selectedSection = remember { mutableStateOf("trabajo") }
+    val showDialog = remember { mutableStateOf(false) }
 
-    val currentPermission = remember { mutableStateOf("location") }
-    val permissionState = remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        permissionViewModel.checkLocationPermission(context)
-        permissionViewModel.checkStoragePermission(context)
-        permissionViewModel.checkInternetPermission()
-    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        if (!Places.isInitialized()) {
+            Places.initialize(context, "AIzaSyAmqr5VECPpGR-vlAo3mGqn60Dg24I9pV8")
+        }
 
-    val locationPermissionGranted by permissionViewModel.locationPermissionGranted.observeAsState(false)
-    val storagePermissionGranted by permissionViewModel.storagePermissionGranted.observeAsState(false)
+        // Verificar los permisos al inicio
+        LaunchedEffect(Unit) {
+            permissionViewModel.checkLocationPermission(context)
+            permissionViewModel.checkStoragePermission(context)
+            permissionViewModel.checkInternetPermission()
+        }
 
-    LaunchedEffect(currentPermission.value) {
-        when (currentPermission.value) {
-            "location" -> {
-                if (locationPermissionGranted) {
-                    currentPermission.value = "storage"
-                }
-            }
-            "storage" -> {
-                if (storagePermissionGranted) {
-                    currentPermission.value = "internet"
+        // Observar los cambios de los permisos utilizando LiveData y observeAsState
+        val locationPermissionGranted by permissionViewModel.locationPermissionGranted.observeAsState(
+            false
+        )
+        val storagePermissionGranted by permissionViewModel.storagePermissionGranted.observeAsState(
+            false
+        )
+
+        // Condicional para mostrar la UI según los permisos
+        if (locationPermissionGranted && storagePermissionGranted) {
+            // Mostrar la UI principal
+            Text("Bienvenido a la app")
+        } else {
+            // Mostrar pantalla de permisos
+            PermissionScreen(permissionViewModel)
+        }
+
+
+        // 🔹 Parte Superior - Información fija
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.3f)
+                .border(width = 1.dp, color = colorScheme.onBackground)
+        ) {
+            Text("Información Principal", style = MaterialTheme.typography.titleMedium)
+            HorizontalDivider()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                MiDesplegable(viewModel = clienteViewModel)
+                IconButton(
+                    onClick = {
+                        showDialog.value = true
+                    },
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .background(colorScheme.onBackground)
+                ) {
+                    Icon(
+                        Icons.Outlined.Add,
+                        contentDescription = "Agregar cliente",
+                        tint = colorScheme.background
+                    )
                 }
             }
         }
-    }
+        if (showDialog.value) {
+            NuevoClienteForm(
+                onDismiss = { showDialog.value = false },
+                clienteViewModel = clienteViewModel
+            )
+        }
 
-    // Estado para controlar qué vista mostrar en la parte inferior
-    val selectedSection = remember { mutableStateOf("trabajo") }
-    val showDialog = remember { mutableStateOf(false) } // Estado para mostrar el diálogo
-
-
-    if (!permissionState.value) {
-        PermissionScreen(permissionViewModel)
-    } else {
-        Column(
+        // 🔹 Parte Inferior - Contenido Dinámico
+        Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            verticalArrangement = Arrangement.SpaceBetween
+                .weight(0.7f),
         ) {
-
-
-            if (!Places.isInitialized()) {
-                Places.initialize(context, "AIzaSyAmqr5VECPpGR-vlAo3mGqn60Dg24I9pV8")
-            }
-
-            val permissionViewModel: PermissionViewModel = viewModel()
-
-            // Verificar los permisos al inicio
-            LaunchedEffect(Unit) {
-                permissionViewModel.checkLocationPermission(context)
-                permissionViewModel.checkStoragePermission(context)
-                permissionViewModel.checkInternetPermission()
-            }
-
-            // Observar los cambios de los permisos utilizando LiveData y observeAsState
-            val locationPermissionGranted by permissionViewModel.locationPermissionGranted.observeAsState(
-                false
-            )
-            val storagePermissionGranted by permissionViewModel.storagePermissionGranted.observeAsState(
-                false
-            )
-
-            // Condicional para mostrar la UI según los permisos
-            if (locationPermissionGranted && storagePermissionGranted) {
-                // Mostrar la UI principal
-                Text("Bienvenido a la app")
-            } else {
-                // Mostrar pantalla de permisos
-                PermissionScreen(permissionViewModel)
-            }
-
-
-            // 🔹 Parte Superior - Información fija
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(0.3f)
-                    .border(width = 1.dp, color = colorScheme.onBackground)
+                    .fillMaxHeight()
+                    .weight(1f) // Toma la mitad del espacio
             ) {
-                Text("Información Principal", style = MaterialTheme.typography.titleMedium)
-                HorizontalDivider()
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    MiDesplegable(viewModel = viewModel)
-                    IconButton(
-                        onClick = {
-                            showDialog.value = true
-                        },
+                when (selectedSection.value) {
+                    "trabajo" -> TrabajoScreen()
+                    "materiales" -> MaterialesScreen()
+                    "firma" -> FirmaScreen()
+                    "observaciones1" -> Observaciones1Screen()
+                    "observaciones2" -> Observaciones2Screen()
+                }
+            }
+
+            // 🔹 Botones de Cambio
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.End
+            ) {
+                val shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+
+                listOf(
+                    Icons.Filled.Work to "trabajo",
+                    Icons.Filled.Cable to "materiales",
+                    Icons.Filled.TextFormat to "firma",
+                    Icons.Filled.NoteAlt to "observaciones1",
+                    Icons.Outlined.NoteAlt to "observaciones2"
+                ).forEach { (icon, text) ->
+                    FloatingActionButton(
+                        onClick = { selectedSection.value = text },
+                        shape = shape,
                         modifier = Modifier
-                            .padding(start = 8.dp)
-                            .background(colorScheme.onBackground)
+                            .padding(vertical = 4.dp)
                     ) {
-                        Icon(
-                            Icons.Outlined.Add,
-                            contentDescription = "Agregar cliente",
-                            tint = colorScheme.background
-                        )
-                    }
-                }
-            }
-            if (showDialog.value) {
-                NuevoClienteForm(
-                    onDismiss = { showDialog.value = false },
-                    onConfirm = { f1, f2, f3, f4 ->
-                        viewModel.createClient(f1, f2, f3, f4)
-                    }
-                )
-            }
-
-            // 🔹 Parte Inferior - Contenido Dinámico
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.7f),
-            ) {
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f) // Toma la mitad del espacio
-                ) {
-                    when (selectedSection.value) {
-                        "trabajo" -> TrabajoScreen()
-                        "materiales" -> MaterialesScreen()
-                        "firma" -> FirmaScreen()
-                        "observaciones1" -> Observaciones1Screen()
-                        "observaciones2" -> Observaciones2Screen()
-                    }
-                }
-
-                // 🔹 Botones de Cambio
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.End
-                ) {
-                    val shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
-
-                    listOf(
-                        Icons.Filled.Work to "trabajo",
-                        Icons.Filled.Cable to "materiales",
-                        Icons.Filled.TextFormat to "firma",
-                        Icons.Filled.NoteAlt to "observaciones1",
-                        Icons.Outlined.NoteAlt to "observaciones2"
-                    ).forEach { (icon, text) ->
-                        FloatingActionButton(
-                            onClick = { selectedSection.value = text },
-                            shape = shape,
-                            modifier = Modifier
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Icon(icon, contentDescription = text)
-                        }
+                        Icon(icon, contentDescription = text)
                     }
                 }
             }
