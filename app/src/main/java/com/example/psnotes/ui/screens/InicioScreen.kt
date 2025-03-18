@@ -1,5 +1,6 @@
 package com.example.psnotes.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -33,8 +34,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.components.MiDesplegable
 import com.example.psnotes.ui.components.PermissionScreen
@@ -50,8 +56,7 @@ import com.google.android.libraries.places.api.Places
 
 @Composable
 fun InicioScreen(
-    paddingValues: PaddingValues,
-    clienteViewModel: ClienteViewModel
+    paddingValues: PaddingValues, clienteViewModel: ClienteViewModel
 ) {
     val context = LocalContext.current
 
@@ -86,14 +91,10 @@ fun InicioScreen(
         )
 
         // Condicional para mostrar la UI según los permisos
-        if (locationPermissionGranted && storagePermissionGranted) {
-            // Mostrar la UI principal
-            Text("Bienvenido a la app")
-        } else {
+        if (!locationPermissionGranted || !storagePermissionGranted) {
             // Mostrar pantalla de permisos
             PermissionScreen(permissionViewModel)
         }
-
 
         // 🔹 Parte Superior - Información fija
         Column(
@@ -101,9 +102,14 @@ fun InicioScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.3f)
-                .border(width = 1.dp, color = colorScheme.onBackground)
         ) {
-            Text("Información Principal", style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = "Información Principal",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = colorScheme.onBackground
+            )
             HorizontalDivider()
             Row(
                 modifier = Modifier
@@ -118,7 +124,8 @@ fun InicioScreen(
                     },
                     modifier = Modifier
                         .padding(start = 8.dp)
-                        .background(colorScheme.onBackground)
+                        .clip(RoundedCornerShape(60.dp))
+                        .background(colorScheme.primary)
                 ) {
                     Icon(
                         Icons.Outlined.Add,
@@ -130,12 +137,12 @@ fun InicioScreen(
         }
         if (showDialog.value) {
             NuevoClienteForm(
-                onDismiss = { showDialog.value = false },
-                clienteViewModel = clienteViewModel
+                onDismiss = { showDialog.value = false }, clienteViewModel = clienteViewModel
             )
         }
 
         // 🔹 Parte Inferior - Contenido Dinámico
+        HorizontalDivider()
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -157,8 +164,7 @@ fun InicioScreen(
 
             // 🔹 Botones de Cambio
             Column(
-                modifier = Modifier
-                    .fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
@@ -174,8 +180,9 @@ fun InicioScreen(
                     FloatingActionButton(
                         onClick = { selectedSection.value = text },
                         shape = shape,
-                        modifier = Modifier
-                            .padding(vertical = 4.dp)
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        contentColor = colorScheme.onSurface,
+                        containerColor = colorScheme.primary
                     ) {
                         Icon(icon, contentDescription = text)
                     }

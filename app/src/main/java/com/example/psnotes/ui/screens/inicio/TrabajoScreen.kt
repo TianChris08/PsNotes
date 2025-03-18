@@ -43,7 +43,7 @@ fun TrabajoScreen() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .border(1.dp, color = colorScheme.onBackground)
+            .padding(10.dp)
     ) {
         item {
             Row(
@@ -52,7 +52,7 @@ fun TrabajoScreen() {
                 horizontalArrangement = Arrangement.Center
             )
             {
-                Text("Trabajo", style = typography.titleLarge)
+                Text("Trabajo", style = typography.titleLarge, color = colorScheme.onBackground)
             }
 
             HorizontalDivider(thickness = 3.dp)
@@ -62,8 +62,8 @@ fun TrabajoScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Tarifa por hora (€):", style = typography.titleMedium)
-                Text(text = String.format("%.2f €", tarifaPorHora), style = typography.titleMedium)
+                Text("Tarifa por hora (€):", style = typography.titleMedium, color = colorScheme.onBackground)
+                Text(text = String.format("%.2f €", tarifaPorHora), style = typography.titleMedium, color = colorScheme.onBackground)
             }
 
             Slider(
@@ -85,7 +85,8 @@ fun TrabajoScreen() {
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
                     text = "Trabajo realizado",
-                    style = typography.titleMedium
+                    style = typography.titleMedium,
+                    color = colorScheme.onBackground
                 )
 
                 TextField(
