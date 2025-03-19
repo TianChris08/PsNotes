@@ -1,5 +1,6 @@
 package com.example.psnotes.ui.theme
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,9 +11,10 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.graphics.green
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Green100,
+    primary = Green40,
     secondary = Green40,
     tertiary = Green20,
 
@@ -27,18 +29,17 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue60,
-    secondary = Blue80,
-    tertiary = Blue100,
+    primary = MutedOlive,
+    secondary = SoftBeige,
+    tertiary = DeepGrey,
 
-    // Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    background = WarmIvory,
+    surface = SoftBeige,
     onPrimary = Color.White,
-    onSecondary = Color.White,
+    onSecondary = Color.Black,
     onTertiary = Color.White,
-    onBackground = Color(0xFF000000),
-    onSurface = Color(0xFF1C1B1F),
+    onBackground = Color.Black,
+    onSurface = DeepGrey
 )
 
 @Composable

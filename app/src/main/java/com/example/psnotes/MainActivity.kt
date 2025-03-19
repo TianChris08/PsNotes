@@ -11,12 +11,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.psnotes.data.database.ClienteTable
 import com.example.psnotes.data.database.MaterialTable
 import com.example.psnotes.data.database.TrabajadorTable
 import com.example.psnotes.ui.components.BottomBar
+import com.example.psnotes.ui.components.SplashScreen
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
 import com.example.psnotes.ui.screens.MapScreen
@@ -33,6 +35,11 @@ class MainActivity : ComponentActivity() {
             PsNotesTheme {
                 val context = LocalContext.current
                 val navController = rememberNavController()
+
+                val navBackStackEntry = navController.currentBackStackEntryAsState().value
+
+                // Get the current destination route
+                val currentRoute = navBackStackEntry?.destination?.route
 
                 //context.deleteDatabase("clientes_db2")
 
@@ -64,14 +71,17 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        //if (currentRoute != "InicioSesion") {
-                        BottomBar(navController)
-                        //}
+                        if (currentRoute != "Splash") {
+                            BottomBar(navController, currentRoute.toString())
+                        }
                     }) { paddingValues ->
                     NavHost(
                         navController = navController,
-                        startDestination = "Inicio",
+                        startDestination = "Splash",
                     ) {
+                        composable("Splash") {
+                            SplashScreen(navController)
+                        }
                         composable("InicioSesion") {
                             InicioSesion(paddingValues, viewModelTrabajador, navController)
                         }

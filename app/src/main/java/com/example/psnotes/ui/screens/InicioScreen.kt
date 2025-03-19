@@ -16,7 +16,14 @@ import androidx.compose.material.icons.filled.NoteAlt
 import androidx.compose.material.icons.filled.TextFormat
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Cable
 import androidx.compose.material.icons.outlined.NoteAlt
+import androidx.compose.material.icons.outlined.Router
+import androidx.compose.material.icons.outlined.TextFormat
+import androidx.compose.material.icons.outlined.Work
+import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -48,7 +55,6 @@ import com.example.psnotes.ui.screens.inicio.TrabajoScreen
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.PermissionViewModel
 import com.google.android.libraries.places.api.Places
-
 
 @Composable
 fun InicioScreen(
@@ -93,61 +99,69 @@ fun InicioScreen(
         }
 
         // 🔹 Parte Superior - Información fija
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.3f)
+        Row(modifier = Modifier
+            .fillMaxSize()
+            .weight(0.20f)
+            .background(colorScheme.surface)
         ) {
-            Text(
-                text = "Información Principal",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = colorScheme.onBackground
-            )
-            HorizontalDivider()
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.Center
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ) {
-                MiDesplegable(viewModel = clienteViewModel)
-                IconButton(
-                    onClick = {
-                        showDialog.value = true
-                    },
+                Text(
+                    text = "Información Principal",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = colorScheme.onBackground
+                )
+                HorizontalDivider(color = colorScheme.background)
+                Row(
                     modifier = Modifier
-                        .padding(start = 8.dp)
-                        .clip(RoundedCornerShape(60.dp))
-                        .background(colorScheme.primary)
+                        .fillMaxSize()
+                        .padding(top = 8.dp),
                 ) {
-                    Icon(
-                        Icons.Outlined.Add,
-                        contentDescription = "Agregar cliente",
-                        tint = colorScheme.background
-                    )
+                    MiDesplegable(viewModel = clienteViewModel)
+                    IconButton(
+                        onClick = {
+                            showDialog.value = true
+                        },
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .clip(RoundedCornerShape(60.dp))
+                            .background(colorScheme.primaryContainer)
+                    ) {
+                        Icon(
+                            Icons.Outlined.Add,
+                            contentDescription = "Agregar cliente",
+                            tint = colorScheme.onPrimaryContainer
+                        )
+                    }
                 }
             }
         }
+
         if (showDialog.value) {
             NuevoClienteForm(
                 onDismiss = { showDialog.value = false }, clienteViewModel = clienteViewModel
             )
         }
 
+        HorizontalDivider(color = colorScheme.secondary)
+
         // 🔹 Parte Inferior - Contenido Dinámico
-        HorizontalDivider()
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(0.7f),
+                .weight(0.65f),
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f) // Toma la mitad del espacio
+                    .weight(1f)
+                    .background(colorScheme.background)
             ) {
                 when (selectedSection.value) {
                     "trabajo" -> TrabajoScreen()
@@ -167,21 +181,55 @@ fun InicioScreen(
                 val shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
 
                 listOf(
-                    Icons.Filled.Work to "trabajo",
-                    Icons.Filled.Cable to "materiales",
-                    Icons.Filled.TextFormat to "firma",
-                    Icons.Filled.NoteAlt to "observaciones1",
+                    Icons.Outlined.WorkOutline to "trabajo",
+                    Icons.Outlined.Router to "materiales",
+                    Icons.Outlined.TextFormat to "firma",
+                    Icons.Outlined.NoteAlt to "observaciones1",
                     Icons.Outlined.NoteAlt to "observaciones2"
                 ).forEach { (icon, text) ->
                     FloatingActionButton(
                         onClick = { selectedSection.value = text },
                         shape = shape,
                         modifier = Modifier.padding(vertical = 4.dp),
-                        contentColor = colorScheme.onSurface,
-                        containerColor = colorScheme.primary
+                        contentColor = colorScheme.onBackground,
+                        containerColor = colorScheme.tertiary
                     ) {
                         Icon(icon, contentDescription = text)
                     }
+                }
+            }
+        }
+
+        HorizontalDivider(color = colorScheme.secondary)
+
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(0.15f)
+                .background(colorScheme.surface)
+        ) {
+            Column(modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
+                Row(horizontalArrangement = Arrangement.Center) {
+                    Text(
+                        "Horas trabajo: X h     Total: X €",
+                        color = colorScheme.onBackground
+                    )
+                }
+                Button(
+                    colors = ButtonColors(
+                        containerColor = colorScheme.tertiary,
+                        contentColor = colorScheme.onBackground,
+                        disabledContainerColor = colorScheme.surfaceVariant,
+                        disabledContentColor = colorScheme.onSurfaceVariant
+                    ),
+                    onClick = { guardarNota() },
+                ) {
+                    Text(
+                        text = "Guardar Nota",
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
