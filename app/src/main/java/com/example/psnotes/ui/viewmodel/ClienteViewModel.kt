@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteDAO
-import com.example.psnotes.ui.screens.ClienteState
+import com.example.psnotes.data.state.ClienteState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

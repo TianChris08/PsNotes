@@ -1,10 +1,6 @@
-package com.example.psnotes.ui.screens
+package com.example.psnotes.data.state
 
-import com.example.psnotes.data.model.Estado
 import com.example.psnotes.data.model.Material
-import com.example.psnotes.data.model.TipoMaterial
-import java.time.LocalDateTime
-
 
 data class MaterialState(
     val materiales: List<Material> = emptyList(),

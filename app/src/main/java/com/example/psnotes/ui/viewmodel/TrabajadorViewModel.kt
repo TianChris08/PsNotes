@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Trabajador
 import com.example.psnotes.data.repository.TrabajadorDAO
-import com.example.psnotes.ui.screens.TrabajadorState
+import com.example.psnotes.data.state.TrabajadorState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

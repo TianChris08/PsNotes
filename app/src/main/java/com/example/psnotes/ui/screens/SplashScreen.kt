@@ -1,4 +1,4 @@
-package com.example.psnotes.ui.components
+package com.example.psnotes.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -42,7 +40,7 @@ fun SplashScreen(navController: NavController) {
                         painterResource(id = R.drawable.pensisoft_logo_dark_theme)
                     } else {
                         painterResource(id = R.drawable.pensisoft_logo_light_theme)
-                    }) as Painter,
+                    }),
                 contentDescription = "Logotipo de Pensisoft",
                 contentScale = ContentScale.Inside
             )

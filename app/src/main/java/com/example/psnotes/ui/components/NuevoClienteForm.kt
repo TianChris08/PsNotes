@@ -1,4 +1,4 @@
-package com.example.psnotes.ui.screens
+package com.example.psnotes.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

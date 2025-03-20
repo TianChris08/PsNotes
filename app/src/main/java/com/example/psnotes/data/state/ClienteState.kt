@@ -1,4 +1,4 @@
-package com.example.psnotes.ui.screens
+package com.example.psnotes.data.state
 
 import com.example.psnotes.data.model.Cliente
 

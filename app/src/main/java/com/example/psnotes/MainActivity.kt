@@ -18,7 +18,7 @@ import com.example.psnotes.data.database.ClienteTable
 import com.example.psnotes.data.database.MaterialTable
 import com.example.psnotes.data.database.TrabajadorTable
 import com.example.psnotes.ui.components.BottomBar
-import com.example.psnotes.ui.components.SplashScreen
+import com.example.psnotes.ui.screens.SplashScreen
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
 import com.example.psnotes.ui.screens.MapScreen

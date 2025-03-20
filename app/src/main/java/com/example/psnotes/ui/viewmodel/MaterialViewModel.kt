@@ -10,7 +10,7 @@ import com.example.psnotes.data.model.Estado
 import com.example.psnotes.data.model.Material
 import com.example.psnotes.data.model.TipoMaterial
 import com.example.psnotes.data.repository.MaterialDAO
-import com.example.psnotes.ui.screens.MaterialState
+import com.example.psnotes.data.state.MaterialState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

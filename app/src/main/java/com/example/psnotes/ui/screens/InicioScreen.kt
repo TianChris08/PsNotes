@@ -11,16 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cable
-import androidx.compose.material.icons.filled.NoteAlt
-import androidx.compose.material.icons.filled.TextFormat
-import androidx.compose.material.icons.filled.Work
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Cable
 import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.Router
 import androidx.compose.material.icons.outlined.TextFormat
-import androidx.compose.material.icons.outlined.Work
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -46,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.components.MiDesplegable
+import com.example.psnotes.ui.components.NuevoClienteForm
 import com.example.psnotes.ui.components.PermissionScreen
 import com.example.psnotes.ui.screens.inicio.FirmaScreen
 import com.example.psnotes.ui.screens.inicio.MaterialesScreen
@@ -224,7 +219,7 @@ fun InicioScreen(
                         disabledContainerColor = colorScheme.surfaceVariant,
                         disabledContentColor = colorScheme.onSurfaceVariant
                     ),
-                    onClick = { guardarNota() },
+                    onClick = { /*guardarNota()*/ },
                 ) {
                     Text(
                         text = "Guardar Nota",
