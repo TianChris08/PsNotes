@@ -85,4 +85,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.7.8") // Reemplaza con la última versión
     implementation("androidx.compose.material:material:1.5.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.8") // Necesario para LiveData con Compose
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.2") // Verifica la versión más reciente
+    implementation("com.google.android.libraries.places:places:3.3.0")
 }

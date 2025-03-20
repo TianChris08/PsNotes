@@ -1,5 +1,6 @@
 package com.example.psnotes.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,8 +30,16 @@ class ClienteViewModel(
     init {
         viewModelScope.launch {
             try {
-                dao.getClients().collectLatest { cliente ->
-                    state = state.copy(clientes = cliente)
+                dao.getTodosClientesFlow().collectLatest { nuevosClientes ->
+                    // Verifica el contenido antes de sobrescribir
+                    Log.d("NotaViewModel", "Clientes anteriores: ${state.clientes}")
+                    Log.d("NotaViewModel", "Nuevos clientes: $nuevosClientes")
+
+                    // Aquí se sobrescribe la lista de clientes
+                    state = state.copy(clientes = nuevosClientes)
+
+                    // Verifica el contenido después de sobrescribir
+                    Log.d("NotaViewModel", "Clientes después de actualizar: ${state.clientes}")
                 }
             } catch (e: Exception) {
                 errorGeneral = "Error al cargar clientes: ${e.message}"

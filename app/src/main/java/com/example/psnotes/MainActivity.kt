@@ -16,15 +16,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.psnotes.data.database.ClienteTable
 import com.example.psnotes.data.database.MaterialTable
+import com.example.psnotes.data.database.NotasTable
 import com.example.psnotes.data.database.TrabajadorTable
 import com.example.psnotes.ui.components.BottomBar
-import com.example.psnotes.ui.screens.SplashScreen
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
 import com.example.psnotes.ui.screens.MapScreen
 import com.example.psnotes.ui.screens.NotasScreen
+import com.example.psnotes.ui.screens.SplashScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 
 class MainActivity : ComponentActivity() {
@@ -59,12 +61,27 @@ class MainActivity : ComponentActivity() {
                 val MaterialesDao = dbMateriales.materialDao
 
                 // BASE DE DATOS DE CLIENTES
-                val db = Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db").build()
-                val dao = db.clienteDao
+                val dbClientes = Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db").build()
+                val clienteDao = dbClientes.clienteDao
                 val viewModelCliente by viewModels<ClienteViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return ClienteViewModel(dao) as T
+                            return ClienteViewModel(clienteDao) as T
+                        }
+                    }
+                })
+
+                // BASE DE DATOS DE NOTAS
+                val dbNotas = Room.databaseBuilder(this, NotasTable::class.java, "notas_db").build()
+                val notasDao = dbNotas.notaDAO
+                val viewModelNotas by viewModels<NotaViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return NotaViewModel(
+                                notaDao = notasDao,
+                                trabajadorDao = trabajadorDao,
+                                clienteDao = clienteDao
+                            ) as T
                         }
                     }
                 })
@@ -89,10 +106,10 @@ class MainActivity : ComponentActivity() {
                             InicioScreen(paddingValues, viewModelCliente)
                         }
                         composable("Buscar") {
-                            MapScreen(paddingValues, context, dao)
+                            MapScreen(paddingValues, context, clienteDao)
                         }
                         composable("Notas") {
-                            NotasScreen(paddingValues, navController)
+                            NotasScreen(paddingValues, navController, viewModelNotas)
                         }
                         composable("Perfil") {
                             //PerfilScreen(paddingValues, navController)

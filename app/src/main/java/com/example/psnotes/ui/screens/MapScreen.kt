@@ -5,13 +5,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import com.example.psnotes.data.database.ClienteTable
 import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteDAO
 import com.google.android.gms.maps.model.LatLng
@@ -30,7 +26,7 @@ fun MapScreen(paddingValues: PaddingValues, context: Context, dao: ClienteDAO) {
     // Ejecutar la consulta en un hilo de fondo
     LaunchedEffect(Unit) {
         clientes.value = withContext(Dispatchers.IO) {
-            dao.getClientsOnce() // Asegúrate de que este método existe en tu DAO
+            dao.getTodosClientes() // Asegúrate de que este método existe en tu DAO
         }
     }
 
