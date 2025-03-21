@@ -1,14 +1,19 @@
 package com.example.psnotes.data.model
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(entity = Cliente::class, parentColumns = ["clienteId"], childColumns = ["clienteId"], onDelete = ForeignKey.CASCADE)
+    ]
+)
 data class Nota(
     @PrimaryKey(autoGenerate = false)
     val id: String, //aosiuhd9283h49uhdf
     val personaContacto: String, // Pepe el cortados
-    val clienteId: String?, // Bar la sardina
+    val clienteId: String, // Bar la sardina
     //val lineasNotas: LineasNotas?,
     val trabajadorId: String, // Pol
     val notaCerradaEn: String?, // hoy a las 15:32:55 // Convertir a fecha luego

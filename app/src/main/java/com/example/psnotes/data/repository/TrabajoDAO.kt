@@ -9,7 +9,7 @@ import com.example.psnotes.data.model.Material
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface TrabajoDAO {
+interface dTrabajoDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrabajo(trabajo: String)

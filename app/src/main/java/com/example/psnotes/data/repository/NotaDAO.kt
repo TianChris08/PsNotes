@@ -15,7 +15,7 @@ interface NotaDAO {
     suspend fun insertNota(nota: Nota)
 
     @Query("SELECT * FROM Nota")
-    suspend fun getNotasFlow() : Flow<List<Nota>>
+    fun getNotasFlow() : Flow<List<Nota>>
 
     @Query("SELECT * FROM Nota")
     suspend fun getNotas(): List<Nota>

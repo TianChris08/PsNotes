@@ -6,6 +6,6 @@ import com.example.psnotes.data.model.Nota
 import com.example.psnotes.data.repository.NotaDAO
 
 @Database(entities = [Nota::class], version = 1)
-abstract class NotasTable : RoomDatabase() {
+abstract class NotaTable : RoomDatabase() {
     abstract val notaDAO : NotaDAO
 }

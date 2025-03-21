@@ -172,4 +172,11 @@ class ClienteViewModel(
         return Pattern.matches(regexCorreo, correo)
     }
 
+    fun obtenerClienteConNotas(idCliente: String) {
+        viewModelScope.launch {
+            val clienteConNotas = dao.getClienteConNotas(idCliente)
+            // Usar clienteConNotas para actualizar tu UI
+        }
+    }
+
 }

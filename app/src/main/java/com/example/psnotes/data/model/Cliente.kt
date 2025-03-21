@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity
+@Entity(tableName = "clientes")
 data class Cliente(
     @PrimaryKey(autoGenerate = false)
-    val id : String,
+    val clienteId : String,
     val fiscalName: String,
     val commercialName: String,
     val telefono: String,

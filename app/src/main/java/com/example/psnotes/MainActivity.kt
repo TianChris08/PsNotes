@@ -14,9 +14,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import com.example.psnotes.data.AppDatabase
 import com.example.psnotes.data.database.ClienteTable
-import com.example.psnotes.data.database.MaterialTable
-import com.example.psnotes.data.database.NotasTable
+import com.example.psnotes.data.database.NotaTable
 import com.example.psnotes.data.database.TrabajadorTable
 import com.example.psnotes.ui.components.BottomBar
 import com.example.psnotes.ui.screens.InicioScreen
@@ -26,8 +26,10 @@ import com.example.psnotes.ui.screens.NotasScreen
 import com.example.psnotes.ui.screens.SplashScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
+import kotlin.jvm.java
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +45,14 @@ class MainActivity : ComponentActivity() {
                 // Get the current destination route
                 val currentRoute = navBackStackEntry?.destination?.route
 
+
                 //context.deleteDatabase("clientes_db2")
+
+
+                val db = Room.databaseBuilder(
+                    this,
+                    AppDatabase::class.java, "psnotes.db"
+                ).build()
 
                 // BASE DE DATOS TRABAJADORES
                 val dbTrabajadores = Room.databaseBuilder(this, TrabajadorTable::class.java, "trabajadores_db").build()
@@ -56,9 +65,15 @@ class MainActivity : ComponentActivity() {
                     }
                 })
 
-                // BASE DE DATOS MATERIALES(TODO)
-                val dbMateriales = Room.databaseBuilder(this, MaterialTable::class.java, "materiales_db").build()
-                val MaterialesDao = dbMateriales.materialDao
+                // BASE DE DATOS MATERIALES
+                val materialDao = db.materialDao
+                val viewModelMaterial by viewModels<MaterialViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return MaterialViewModel(materialDao) as T
+                        }
+                    }
+                })
 
                 // BASE DE DATOS DE CLIENTES
                 val dbClientes = Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db").build()
@@ -72,7 +87,7 @@ class MainActivity : ComponentActivity() {
                 })
 
                 // BASE DE DATOS DE NOTAS
-                val dbNotas = Room.databaseBuilder(this, NotasTable::class.java, "notas_db").build()
+                val dbNotas = Room.databaseBuilder(this, NotaTable::class.java, "notas_db").build()
                 val notasDao = dbNotas.notaDAO
                 val viewModelNotas by viewModels<NotaViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {

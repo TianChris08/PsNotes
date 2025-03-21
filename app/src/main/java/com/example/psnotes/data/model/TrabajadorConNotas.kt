@@ -9,5 +9,5 @@ data class TrabajadorConNotas(
         parentColumn = "id",
         entityColumn = "trabajadorId"
     )
-    val notas: List<Nota>
+    val notas: List<Nota>? = null
 )

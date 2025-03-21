@@ -87,7 +87,7 @@ class NotaViewModel(
         val nota = Nota(
             UUID.randomUUID().toString(),
             personaContacto,
-            clienteId,
+            clienteId.toString(),
             trabajadorId.toString(),
             notaCerradaEn,
             fecha.toString(),
