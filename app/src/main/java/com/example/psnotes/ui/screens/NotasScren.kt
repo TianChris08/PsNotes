@@ -1,6 +1,5 @@
 package com.example.psnotes.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,7 +16,11 @@ import androidx.navigation.NavController
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 
 @Composable
-fun NotasScreen(paddingValues: PaddingValues, navController: NavController, notasViewModel: NotaViewModel?) {
+fun NotasScreen(
+    paddingValues: PaddingValues,
+    navController: NavController,
+    notasViewModel: NotaViewModel?
+) {
 
     Box(
         modifier = Modifier
@@ -29,7 +32,9 @@ fun NotasScreen(paddingValues: PaddingValues, navController: NavController, nota
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(notas) { nota ->
-                Card(modifier = Modifier.padding(8.dp).fillMaxWidth()) {
+                Card(modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()) {
                     Column(modifier = Modifier.padding(8.dp)) {
                         Text(text = "Persona de contacto: ${notasViewModel.state.notas[nota].personaContacto}")
                         Text(text = "Fecha: ${notasViewModel.state.notas[nota].fecha ?: "Fecha no disponible"}")

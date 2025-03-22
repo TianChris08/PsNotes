@@ -6,9 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Nota
-import com.example.psnotes.data.repository.ClienteDAO
 import com.example.psnotes.data.repository.NotaDAO
-import com.example.psnotes.data.repository.TrabajadorDAO
 import com.example.psnotes.data.state.NotaState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -81,7 +79,7 @@ class NotaViewModel(
         observacionesPublias: String?,
         observacionesPrivadas: String?,
         firmaUri: String?
-    ) : MutableMap<String, String?>? {
+    ): MutableMap<String, String?>? {
         val nota = Nota(
             UUID.randomUUID().toString(),
             personaContacto,

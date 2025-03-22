@@ -14,14 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
-import com.example.psnotes.data.AppDatabase
 import com.example.psnotes.data.AppDatabaseSingleton
-import com.example.psnotes.data.database.ClienteTable
-import com.example.psnotes.data.database.MaterialTable
-import com.example.psnotes.data.database.NotasTable
-import com.example.psnotes.data.database.TrabajadorTable
-import com.example.psnotes.data.model.Trabajador
 import com.example.psnotes.ui.components.BottomBar
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
@@ -33,10 +26,6 @@ import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.UUID
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("CoroutineCreationDuringComposition")
@@ -90,8 +79,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 })
-
-
 
                 Scaffold(
                     bottomBar = {

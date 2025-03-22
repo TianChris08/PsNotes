@@ -1,12 +1,11 @@
 package com.example.psnotes.ui.components
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Note
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Note
@@ -24,6 +23,47 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+
+
+/*@Composable
+fun BottomBar(navController: NavController) {
+
+    //var selectedItem by remember { mutableStateOf(currentRoute) }
+
+    BottomNavigation {
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.Home, contentDescription = null) },
+            label = { Text("Inicio") },
+            selected = false,
+            onClick = { navController.navigate("Inicio") }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Outlined.Search, contentDescription = null) },
+            label = { Text("Buscar") },
+            selected = false,
+            onClick = { navController.navigate("Buscar") }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Outlined.Note, contentDescription = null) },
+            label = { Text("Notas") },
+            selected = false,
+            onClick = { navController.navigate("Notas") }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Outlined.Face, contentDescription = null) },
+            label = { Text("Perfil") },
+            selected = false,
+            onClick = { navController.navigate("Perfil") }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
+            label = { Text("Ajustes") },
+            selected = false,
+            onClick = { navController.navigate("Ajustes") }
+        )
+    }
+}*/
+
 
 @Composable
 fun BottomBar(navController: NavController, currentRoute: String) {

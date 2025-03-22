@@ -61,7 +61,6 @@ fun InicioScreen(
     val selectedSection = remember { mutableStateOf("trabajo") }
     val showDialog = remember { mutableStateOf(false) }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -1,8 +1,6 @@
 package com.example.psnotes.data
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.core.content.edit
 
 object SessionManager {
     private const val PREFS_NAME = "app_preferences"

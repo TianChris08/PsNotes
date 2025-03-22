@@ -6,9 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.psnotes.data.model.Estado
 import com.example.psnotes.data.model.Material
-import com.example.psnotes.data.model.TipoMaterial
 import com.example.psnotes.data.repository.MaterialDAO
 import com.example.psnotes.data.state.MaterialState
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +16,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.util.UUID
 
 class MaterialViewModel(
@@ -40,9 +37,9 @@ class MaterialViewModel(
         }
     }
 
-    fun changeNombreMaterial(nombreMaterial:String) {
+    fun changeNombreMaterial(nombreMaterial: String) {
         viewModelScope.launch(Dispatchers.Main) {
-            state = state.copy(nombreMaterial = nombreMaterial )
+            state = state.copy(nombreMaterial = nombreMaterial)
         }
     }
 

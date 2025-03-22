@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.psnotes.data.SessionManager
-import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 
 @Composable
@@ -62,25 +61,20 @@ fun InicioSesion(
             modifier = Modifier.padding(10.dp),
             value = nombre,
             onValueChange = { nombre = it },
-            placeholder = { Text("Nombre del trabajador") }
-        )
+            placeholder = { Text("Nombre del trabajador") })
 
         TextField(
             modifier = Modifier.padding(10.dp),
             value = pin,
             onValueChange = { pin = it },
-            placeholder = { Text("Pin de inicio sesión") }
-        )
+            placeholder = { Text("Pin de inicio sesión") })
 
         Checkbox(
-            checked = recordarUsuario,
-            onCheckedChange = { recordarUsuario = it }
-        )
+            checked = recordarUsuario, onCheckedChange = { recordarUsuario = it })
         Text("Iniciar sesión automáticamente")
 
         Button(
-            modifier = Modifier.padding(10.dp),
-            onClick = {
+            modifier = Modifier.padding(10.dp), onClick = {
                 val pinInt = pin.toIntOrNull()
 
                 if (nombre != null && viewModel.state.trabajadores.any { it.nombre == nombre && it.pin == pinInt }) {
@@ -96,8 +90,7 @@ fun InicioSesion(
                 } else {
                     error = true
                 }
-            }
-        ) {
+            }) {
             Text("Iniciar sesión")
         }
 
