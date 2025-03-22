@@ -17,9 +17,7 @@ import java.util.UUID
 
 
 class NotaViewModel(
-    private val notaDao: NotaDAO,
-    private val clienteDao: ClienteDAO,
-    private val trabajadorDao: TrabajadorDAO
+    private val notaDao: NotaDAO
 ) : ViewModel() {
 
     val erroresValidacion = mutableMapOf<String, String?>()

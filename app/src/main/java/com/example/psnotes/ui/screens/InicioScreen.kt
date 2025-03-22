@@ -33,7 +33,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -117,16 +116,17 @@ fun InicioScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     MiDesplegable(viewModel = clienteViewModel)
+                    val shape = RoundedCornerShape(60.dp)
                     IconButton(
                         onClick = {
                             showDialog.value = true
                         },
                         modifier = Modifier
                             .padding(start = 8.dp)
-                            .clip(RoundedCornerShape(60.dp))
-                            .background(colorScheme.primaryContainer)
+                            .background(colorScheme.primaryContainer, shape)
                     ) {
                         Icon(
                             Icons.Outlined.Add,
@@ -173,7 +173,7 @@ fun InicioScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
-                val shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+                //val shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
 
                 listOf(
                     Icons.Outlined.WorkOutline to "trabajo",
@@ -184,7 +184,7 @@ fun InicioScreen(
                 ).forEach { (icon, text) ->
                     FloatingActionButton(
                         onClick = { selectedSection.value = text },
-                        shape = shape,
+                        //shape = shape,
                         modifier = Modifier.padding(vertical = 4.dp),
                         contentColor = colorScheme.onBackground,
                         containerColor = colorScheme.tertiary
@@ -219,7 +219,7 @@ fun InicioScreen(
                         disabledContainerColor = colorScheme.surfaceVariant,
                         disabledContentColor = colorScheme.onSurfaceVariant
                     ),
-                    onClick = { /*guardarNota()*/ },
+                    onClick = {  },
                 ) {
                     Text(
                         text = "Guardar Nota",

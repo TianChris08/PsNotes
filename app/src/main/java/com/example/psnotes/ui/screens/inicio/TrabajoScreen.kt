@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -102,7 +101,7 @@ fun TrabajoScreen() {
                         .border(
                             width = 1.dp,
                             color = colorScheme.primary,
-                            shape = RoundedCornerShape(8.dp)
+                            //shape = RoundedCornerShape(8.dp)
                         ),
                     placeholder = { Text("Escribe aquí...") }
                 )

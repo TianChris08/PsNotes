@@ -1,5 +1,6 @@
 package com.example.psnotes.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -12,15 +13,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.psnotes.R
+import com.example.psnotes.data.SessionManager
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen(context: Context, navController: NavController) {
 
     Box(
         modifier = Modifier
@@ -52,10 +55,14 @@ fun SplashScreen(navController: NavController) {
 
     }
     LaunchedEffect(key1 = true) {
-
-        delay(3000)
         navController.popBackStack()
-        navController.navigate("InicioSesion")
+        if (SessionManager.isLoggedIn(context)) {
+            // Si está logueado, navegar a la pantalla principal
+            navController.navigate("Inicio")
+        } else {
+            // Si no está logueado, navegar a la pantalla de login
+            navController.navigate("InicioSesion")
+        }
     }
 
 }

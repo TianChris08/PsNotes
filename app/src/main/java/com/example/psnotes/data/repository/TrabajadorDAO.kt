@@ -7,14 +7,14 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.psnotes.data.model.Trabajador
-import com.example.psnotes.data.model.TrabajadorConNotas
+//import com.example.psnotes.data.model.TrabajadorConNotas
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TrabajadorDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrabajador(trabajador: Trabajador)
+    fun insertTrabajador(trabajador: Trabajador)
 
     @Query("SELECT * FROM Trabajador")
     fun getTrabajadores() : Flow<List<Trabajador>>
@@ -22,7 +22,7 @@ interface TrabajadorDAO {
     @Delete
     suspend fun deleteTrabajador(trabajador: Trabajador)
 
-    @Transaction
+    /*@Transaction
     @Query("SELECT * FROM Trabajador WHERE id = :trabajadorId")
-    fun obtenerTrabajadorConNotas(trabajadorId: String): TrabajadorConNotas
+    fun obtenerTrabajadorConNotas(trabajadorId: String): TrabajadorConNotas*/
 }

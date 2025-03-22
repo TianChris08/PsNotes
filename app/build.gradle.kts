@@ -56,10 +56,11 @@ dependencies {
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.runner)
-    implementation(libs.androidx.appcompat)
+    implementation("androidx.appcompat:appcompat:1.5.0")
     ksp("androidx.room:room-compiler:2.6.1")
 
     implementation(libs.androidx.core.ktx)
@@ -72,8 +73,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.room.common)
-    implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,6 +85,4 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.8") // Necesario para LiveData con Compose
 
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.2") // Verifica la versión más reciente
-    implementation("com.google.android.libraries.places:places:3.3.0")
 }

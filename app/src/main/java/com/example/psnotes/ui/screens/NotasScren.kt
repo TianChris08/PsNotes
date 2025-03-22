@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 
 @Composable
-fun NotasScreen(paddingValues: PaddingValues, navController: NavController, notasViewModel: NotaViewModel) {
+fun NotasScreen(paddingValues: PaddingValues, navController: NavController, notasViewModel: NotaViewModel?) {
 
     Box(
         modifier = Modifier

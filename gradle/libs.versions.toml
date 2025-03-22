@@ -1,20 +1,22 @@
 [versions]
 agp = "8.9.0"
-kotlin = "2.0.0"
+kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinGradlePlugin = "2.0.21"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2024.04.01"
-mapsCompose = "2.14.0"
+composeBom = "2025.03.00"
+mapsCompose = "4.4.2"
 material = "1.7.8"
-navigationRuntimeKtx = "2.8.8"
-navigationCompose = "2.8.8"
+navigationRuntimeKtx = "2.8.9"
+navigationCompose = "2.8.9"
+playServicesMaps = "19.1.0"
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
-runner = "1.6.1"
+runner = "1.6.2"
 appcompat = "1.7.0"
 
 [libraries]
@@ -40,7 +42,9 @@ androidx-room-common = { group = "androidx.room", name = "room-common", version.
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

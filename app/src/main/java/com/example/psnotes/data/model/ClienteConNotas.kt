@@ -3,7 +3,7 @@ package com.example.psnotes.data.model
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class ClienteConNotas(
+/*data class ClienteConNotas(
     @Embedded val cliente: Cliente,
     @Relation(
         parentColumn = "id",
@@ -11,3 +11,4 @@ data class ClienteConNotas(
     )
     val notas: List<Nota>
 )
+*/
