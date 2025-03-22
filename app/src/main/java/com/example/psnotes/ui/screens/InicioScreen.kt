@@ -47,12 +47,13 @@ import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
 import com.example.psnotes.ui.screens.inicio.Observaciones2Screen
 import com.example.psnotes.ui.screens.inicio.TrabajoScreen
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.PermissionViewModel
 import com.google.android.libraries.places.api.Places
 
 @Composable
 fun InicioScreen(
-    paddingValues: PaddingValues, clienteViewModel: ClienteViewModel
+    paddingValues: PaddingValues, viewModelNota: NotaViewModel, clienteViewModel: ClienteViewModel
 ) {
     val context = LocalContext.current
 
@@ -219,7 +220,7 @@ fun InicioScreen(
                         disabledContainerColor = colorScheme.surfaceVariant,
                         disabledContentColor = colorScheme.onSurfaceVariant
                     ),
-                    onClick = {  },
+                    onClick = { viewModelNota.createNota("Paco", "clienteId_9d8f0eyv", "trabajadorId_fcdw98h", "12:42:44:903", "2024-5-7", "Muy buen trabajo", "Se ha portado mal", "firmas/firmaDelPaco") },
                 ) {
                     Text(
                         text = "Guardar Nota",

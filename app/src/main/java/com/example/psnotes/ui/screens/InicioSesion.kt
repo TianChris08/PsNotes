@@ -20,10 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.psnotes.data.SessionManager
+import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 
 @Composable
-fun InicioSesion(context: Context, paddingValues: PaddingValues, viewModel: TrabajadorViewModel, navController: NavController) {
+fun InicioSesion(
+    context: Context,
+    paddingValues: PaddingValues,
+    viewModel: TrabajadorViewModel,
+    navController: NavController
+) {
 
     var nombre by remember { mutableStateOf("") }
     var pin by remember { mutableStateOf("") }

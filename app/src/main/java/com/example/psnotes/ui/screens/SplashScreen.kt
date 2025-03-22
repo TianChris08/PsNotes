@@ -19,8 +19,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.psnotes.R
+import com.example.psnotes.data.AppDatabase
+import com.example.psnotes.data.AppDatabaseSingleton
 import com.example.psnotes.data.SessionManager
+import com.example.psnotes.data.model.Cliente
+import com.example.psnotes.data.model.Nota
+import com.example.psnotes.data.model.Trabajador
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import java.util.UUID
 
 @Composable
 fun SplashScreen(context: Context, navController: NavController) {
@@ -54,7 +62,13 @@ fun SplashScreen(context: Context, navController: NavController) {
         }
 
     }
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
+
+        val appDatabase = AppDatabaseSingleton.getDatabase(context)
+
+        // Insertar datos de ejemplo en las tablas
+        initializeData(appDatabase)
+
         navController.popBackStack()
         if (SessionManager.isLoggedIn(context)) {
             // Si está logueado, navegar a la pantalla principal
@@ -65,4 +79,40 @@ fun SplashScreen(context: Context, navController: NavController) {
         }
     }
 
+}
+
+private suspend fun initializeData(appDatabase: AppDatabase) {
+    withContext(Dispatchers.IO) {
+        // Insertar datos de ejemplo para cada tabla
+        val trabajador = Trabajador(
+            id = UUID.randomUUID().toString(),
+            nombre = "Chris",
+            tarifa = 25.0,
+            pin = 1234
+        )
+        appDatabase.trabajadorDAO.insertTrabajador(trabajador)
+
+        val cliente = Cliente(
+            id = UUID.randomUUID().toString(),
+            fiscalName = "fiscal",
+            commercialName = "comercial",
+            telefono = "345345345",
+            correo = "345@gmail.com",
+            coordenadasNegocio = "39.9946, -0.0690"
+        )
+        appDatabase.clienteDao.insertClient(cliente)
+
+        val nota = Nota(
+            id = UUID.randomUUID().toString(),
+            personaContacto = "John Doe",
+            clienteId = "cliente1",
+            trabajadorId = "trabajador1",
+            notaCerradaEn = "2025-03-01",
+            fecha = "2025-02-28",
+            observacionesPrivadas = "Observaciones privadas",
+            observacionesPublias = "Se portó mal",
+            firma = "firmado"
+        )
+        appDatabase.notaDAO.insertNota(nota)
+    }
 }
