@@ -25,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
 @Composable
@@ -34,7 +33,7 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
 
     val tiempoTrabajado by trabajoViewModel.tiempoTrabajado.collectAsState()
     var trabajoRealizado by rememberSaveable { mutableStateOf(trabajoViewModel.trabajoRealizado.value) }
-    val precioEstimado by trabajoViewModel.precioEstimado.collectAsState()
+    val precioEstimado by trabajoViewModel.precioManoDeObra.collectAsState()
     var tarifaPorHora = trabajoViewModel.tarifaPorHora.collectAsState().value
 
     LazyColumn(

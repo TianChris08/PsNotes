@@ -22,6 +22,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -34,6 +35,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -58,18 +61,21 @@ import com.google.android.libraries.places.api.Places
 @Composable
 fun InicioScreen(
     paddingValues: PaddingValues,
-    viewModelNota: NotaViewModel,
     viewModelMaterial: MaterialViewModel,
     clienteViewModel: ClienteViewModel
 ) {
     val context = LocalContext.current
 
     val trabajoViewModel: TrabajoViewModel = viewModel()
-    val precioMaterial = 100
-    val precioManoDeObra by trabajoViewModel.precioEstimado.collectAsState()
     val permissionViewModel: PermissionViewModel = viewModel()
+
+
+
+    val precioTodosMateriales by viewModelMaterial.precioMateriales.collectAsState()
+    val precioManoDeObra by trabajoViewModel.precioManoDeObra.collectAsState()
+
     val selectedSection = remember { mutableStateOf("trabajo") }
-    val showDialog = remember { mutableStateOf(false) }
+    val mostrarFormularioNuevoCliente = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -128,15 +134,23 @@ fun InicioScreen(
                         .padding(top = 8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    MiDesplegable(viewModel = clienteViewModel)
-                    val shape = RoundedCornerShape(60.dp)
+                    MiDesplegable(
+                        viewModel = clienteViewModel
+                    )
+
                     IconButton(
                         onClick = {
-                            showDialog.value = true
+                            mostrarFormularioNuevoCliente.value = true
                         },
+                        colors = IconButtonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onBackground,
+                            disabledContainerColor = Color.DarkGray,
+                            disabledContentColor = Color.Gray
+                        ),
                         modifier = Modifier
                             .padding(start = 8.dp)
-                            .background(colorScheme.primaryContainer, shape)
+                            .clip(RoundedCornerShape(60.dp))
                     ) {
                         Icon(
                             Icons.Outlined.Add,
@@ -149,9 +163,9 @@ fun InicioScreen(
             }
         }
 
-        if (showDialog.value) {
+        if (mostrarFormularioNuevoCliente.value) {
             NuevoClienteForm(
-                onDismiss = { showDialog.value = false }, clienteViewModel = clienteViewModel
+                onDismiss = { mostrarFormularioNuevoCliente.value = false }, clienteViewModel = clienteViewModel
             )
         }
 
@@ -211,7 +225,7 @@ fun InicioScreen(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(0.15f)
+                .weight(0.25f)
                 .background(colorScheme.surface)
         ) {
             Column(modifier = Modifier.fillMaxSize(),
@@ -219,7 +233,11 @@ fun InicioScreen(
                 verticalArrangement = Arrangement.Center) {
                 Row(horizontalArrangement = Arrangement.Center) {
                     Text(
-                        "Mano de obra: $precioManoDeObra €   Materiales: ${precioMaterial} €   Total: X €",
+                        "Mano de obra: %.2f €   \nMateriales: %.2f €   \nTotal: %.2f €".format(
+                            precioManoDeObra,
+                            viewModelMaterial.sumarPrecioMateriales(),
+                            precioManoDeObra + viewModelMaterial.sumarPrecioMateriales()
+                        ),
                         color = colorScheme.onBackground
                     )
                 }
@@ -234,6 +252,7 @@ fun InicioScreen(
                 ) {
                     Text(
                         text = "Guardar Nota",
+                        color = colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
                 }

@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
                             InicioSesion(context, paddingValues, viewModelTrabajador, navController)
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelNota, viewModelMaterial, viewModelCliente)
+                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente)
                         }
                         composable("Buscar") {
                             MapScreen(paddingValues, context, clienteDao)

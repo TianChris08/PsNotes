@@ -80,7 +80,7 @@ fun BottomBar(navController: NavController, currentRoute: String) {
 
 
     BottomAppBar(
-        containerColor = colorScheme.tertiary,
+        containerColor = colorScheme.primary,
     ) {
         Row {
             items.forEach { (title, icon) ->

@@ -77,7 +77,7 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                 onValueChange = { text ->
                     searchText = text
                     expanded = true
-                    // Opcional: llamar al método de búsqueda del ViewModel
+                    // Opcional: llamar al mét0do de búsqueda del ViewModel
                     materialViewModel.searchMateriales(text)
                 },
                 label = { Text("Buscar Material") },
@@ -199,7 +199,10 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
 
                             // Precio del material
                             Text(
-                                text = "100€",  // Formatea el precio a 2 decimales
+                                text = "%.2f €".format(materialViewModel.calcularPrecioSegunCantidad(
+                                    nombre = material,
+                                    cantidad = quantity
+                                )),
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                                 modifier = Modifier.padding(horizontal = 8.dp).weight(0.3f),
                                 textAlign = TextAlign.Center

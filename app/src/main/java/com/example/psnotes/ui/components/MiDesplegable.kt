@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
@@ -27,8 +28,9 @@ fun MiDesplegable(viewModel: ClienteViewModel) {
 
     Column {
         Button(
-            onClick = { expanded = !expanded }, colors = ButtonColors(
-                containerColor = colorScheme.tertiary,
+            onClick = { expanded = !expanded },
+            colors = ButtonColors(
+                containerColor = colorScheme.primary,
                 contentColor = colorScheme.onBackground,
                 disabledContainerColor = Color.DarkGray,
                 disabledContentColor = Color.Gray
