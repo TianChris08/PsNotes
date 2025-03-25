@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +51,7 @@ import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.PermissionViewModel
+import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 import com.google.android.libraries.places.api.Places
 
 
@@ -62,6 +64,9 @@ fun InicioScreen(
 ) {
     val context = LocalContext.current
 
+    val trabajoViewModel: TrabajoViewModel = viewModel()
+    val precioMaterial = 100
+    val precioManoDeObra by trabajoViewModel.precioEstimado.collectAsState()
     val permissionViewModel: PermissionViewModel = viewModel()
     val selectedSection = remember { mutableStateOf("trabajo") }
     val showDialog = remember { mutableStateOf(false) }
@@ -165,7 +170,7 @@ fun InicioScreen(
                     .background(colorScheme.background)
             ) {
                 when (selectedSection.value) {
-                    "trabajo" -> TrabajoScreen()
+                    "trabajo" -> TrabajoScreen(trabajoViewModel)
                     "materiales" -> MaterialesScreen(viewModelMaterial)
                     "firma" -> FirmaScreen()
                     "observaciones1" -> Observaciones1Screen()
@@ -193,7 +198,7 @@ fun InicioScreen(
                         //shape = shape,
                         modifier = Modifier.padding(vertical = 4.dp),
                         contentColor = colorScheme.onBackground,
-                        containerColor = colorScheme.tertiary
+                        containerColor = colorScheme.primary
                     ) {
                         Icon(icon, contentDescription = text)
                     }
@@ -214,7 +219,7 @@ fun InicioScreen(
                 verticalArrangement = Arrangement.Center) {
                 Row(horizontalArrangement = Arrangement.Center) {
                     Text(
-                        "Horas trabajo: X h     Total: X €",
+                        "Mano de obra: $precioManoDeObra €   Materiales: ${precioMaterial} €   Total: X €",
                         color = colorScheme.onBackground
                     )
                 }

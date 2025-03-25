@@ -28,6 +28,7 @@ import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
+import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

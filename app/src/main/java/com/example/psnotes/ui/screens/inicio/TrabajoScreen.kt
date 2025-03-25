@@ -14,7 +14,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,14 +29,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
 @Composable
-fun TrabajoScreen() {
+fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
 
-    val viewModel: TrabajoViewModel = viewModel()
 
-    val tiempoTrabajado by viewModel.tiempoTrabajado.collectAsState()
-    var trabajoRealizado by rememberSaveable { mutableStateOf(viewModel.trabajoRealizado.value) }
-    val precioEstimado by viewModel.precioEstimado.collectAsState()
-    var tarifaPorHora = viewModel.tarifaPorHora.collectAsState().value
+    val tiempoTrabajado by trabajoViewModel.tiempoTrabajado.collectAsState()
+    var trabajoRealizado by rememberSaveable { mutableStateOf(trabajoViewModel.trabajoRealizado.value) }
+    val precioEstimado by trabajoViewModel.precioEstimado.collectAsState()
+    var tarifaPorHora = trabajoViewModel.tarifaPorHora.collectAsState().value
 
     LazyColumn(
         modifier = Modifier
@@ -84,7 +82,7 @@ fun TrabajoScreen() {
                     value = trabajoRealizado,
                     onValueChange = {
                         trabajoRealizado = it
-                        viewModel.trabajoRealizado.value = it
+                        trabajoViewModel.trabajoRealizado.value = it
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -114,7 +112,7 @@ fun TrabajoScreen() {
                 ) {
                     IconButton(
                         onClick = {
-                            viewModel.decrementarTiempo()
+                            trabajoViewModel.decrementarTiempo()
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -129,7 +127,7 @@ fun TrabajoScreen() {
                     )
                     IconButton(
                         onClick = {
-                            viewModel.incrementarTiempo()
+                            trabajoViewModel.incrementarTiempo()
                         },
                         modifier = Modifier
                             .weight(1f)
