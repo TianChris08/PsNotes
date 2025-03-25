@@ -25,7 +25,6 @@ fun MiDesplegable(viewModel: ClienteViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecciona un cliente") }
 
-
     Column {
         Button(
             onClick = { expanded = !expanded }, colors = ButtonColors(

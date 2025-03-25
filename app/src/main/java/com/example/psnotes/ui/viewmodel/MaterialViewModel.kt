@@ -24,9 +24,6 @@ class MaterialViewModel(
     var state by mutableStateOf(MaterialState())
         private set
 
-    var _cantidadMaterial = MutableStateFlow(0)
-    val cantidadMaterial: StateFlow<Int> = _cantidadMaterial.asStateFlow()
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
             dao.getMateriales().collectLatest {
@@ -37,93 +34,12 @@ class MaterialViewModel(
         }
     }
 
-    fun changeNombreMaterial(nombreMaterial: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            state = state.copy(nombreMaterial = nombreMaterial)
-        }
-    }
-
-    fun changeTipoMaterial(tipoMaterial: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                tipoMaterial = tipoMaterial
-            )
-        }
-    }
-
-    fun changeCategoriaMaterial(categoriaMaterial: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                categoriaMaterial = categoriaMaterial
-            )
-        }
-    }
-
-    fun changeCantidadMaterial(cantidadMaterial: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                cantidadMaterial = cantidadMaterial
-            )
-        }
-    }
-
-    fun changePrecioUnitarioMaterial(precioUnitario: Double) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                precioUnitarioMaterial = precioUnitario
-            )
-        }
-    }
-
-    fun changeEspecificacionesMaterial(especificaciones: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                especificacionesMaterial = especificaciones
-            )
-        }
-    }
-
-    fun changeFechaExpiracionMaterial(fechaExpiracion: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                fechaExpiracionMaterial = fechaExpiracion
-            )
-        }
-    }
-
-    fun changeEstadoMaterial(estado: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(
-                estadoMaterial = estado
-            )
-        }
-    }
-
-    fun deleteMaterial(material: Material) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dao.deleteMaterial(material)
-        }
-    }
-
-    fun incrementarCantidad() {
-        viewModelScope.launch(Dispatchers.Main) {
-            _cantidadMaterial.update { it + 1 }
-        }
-    }
-
-    fun decrementarCantidad() {
-        viewModelScope.launch(Dispatchers.Main) {
-            _cantidadMaterial.update { if (it > 0) it - 1 else 0 }
-        }
-    }
-
     fun createMaterial() {
         val material = Material(
             UUID.randomUUID().toString(),
             state.nombreMaterial,
             state.tipoMaterial,
             state.categoriaMaterial,
-            state.cantidadMaterial,
             state.precioUnitarioMaterial,
             state.especificacionesMaterial,
             state.fechaExpiracionMaterial.toString(),
@@ -138,29 +54,57 @@ class MaterialViewModel(
         }
     }
 
-    fun createMaterial(
-        nombre: String,
-        tipo: String?,
-        categoria: String,
-        cantidad: Int,
-        precioUnitario: Double,
-        especificaciones: String,
-        fechaExpiracion: String,
-        estado: String
-    ) {
-        val material = Material(
-            UUID.randomUUID().toString(),
-            nombre,
-            tipo,
-            categoria,
-            cantidad,
-            precioUnitario,
-            especificaciones,
-            fechaExpiracion.toString(),
-            estado
-        )
+    fun createMaterial(material: Material) {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insertMaterial(material)
+            try {
+                dao.insertMaterial(material)
+            } catch (e: Exception) {
+                Log.e("MaterialViewModel", "Error al insertar material: ${e.localizedMessage}")
+            }
         }
+    }
+
+    fun searchMateriales(query: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // Actualiza el estado con materiales filtrados
+                val filteredMateriales = state.materiales.filter {
+                    it.nombre.contains(query, ignoreCase = true) ||
+                    it.tipo?.contains(query, ignoreCase = true) == true ||
+                    it.especificaciones?.contains(query, ignoreCase = true) == true
+                }
+
+                // Actualiza el estado con los materiales filtrados
+                state = state.copy(
+                    materialesFiltrados = filteredMateriales
+                )
+            } catch (e: Exception) {
+                Log.e("MaterialViewModel", "Error al buscar materiales: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    fun addMaterialSeleccionado(nombre: String) {
+        state = state.copy(
+            materialesSeleccionados = state.materialesSeleccionados.toMutableMap().apply {
+                this[nombre] = 0 // Añadir con cantidad 0
+            }
+        )
+    }
+
+    fun updateMaterialQuantity(nombre: String, quantity: Int) {
+        state = state.copy(
+            materialesSeleccionados = state.materialesSeleccionados.toMutableMap().apply {
+                this[nombre] = quantity
+            }
+        )
+    }
+
+    fun removeMaterialSeleccionado(nombre: String) {
+        state = state.copy(
+            materialesSeleccionados = state.materialesSeleccionados.toMutableMap().apply {
+                remove(nombre)
+            }
+        )
     }
 }

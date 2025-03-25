@@ -3,6 +3,7 @@ package com.example.psnotes.ui.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.psnotes.data.repository.TrabajadorDAO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,15 +24,6 @@ class TrabajoViewModel : ViewModel() {
 
     private val _tarifaPorHora = MutableStateFlow(10.0) // Tarifa por defecto (10€/h)
     val tarifaPorHora: StateFlow<Double> = _tarifaPorHora.asStateFlow()
-
-    fun setTarifa(nuevaTarifa: Double) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _tarifaPorHora.value = nuevaTarifa
-            withContext(Dispatchers.Main) {
-                actualizarPrecio()
-            }
-        }
-    }
 
     fun incrementarTiempo() {
         viewModelScope.launch(Dispatchers.IO) {

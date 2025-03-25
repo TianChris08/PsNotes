@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -69,15 +70,17 @@ fun InicioSesion(
             onValueChange = { pin = it },
             placeholder = { Text("Pin de inicio sesión") })
 
-        Checkbox(
-            checked = recordarUsuario, onCheckedChange = { recordarUsuario = it })
-        Text("Iniciar sesión automáticamente")
+        Row {
+            Checkbox(
+                checked = recordarUsuario, onCheckedChange = { recordarUsuario = it })
+            Text("Iniciar sesión automáticamente")
+        }
 
         Button(
             modifier = Modifier.padding(10.dp), onClick = {
                 val pinInt = pin.toIntOrNull()
 
-                if (nombre != null && viewModel.state.trabajadores.any { it.nombre == nombre && it.pin == pinInt }) {
+                if (nombre != "" && viewModel.state.trabajadores.any { it.nombre == nombre && it.pin == pinInt }) {
                     SessionManager.setLoggedIn(context, true)
                     if (recordarUsuario) {
                         SessionManager.saveLoginDetails(context, nombre, pinInt ?: -1)

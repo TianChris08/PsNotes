@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.psnotes.data.AppDatabaseSingleton
 import com.example.psnotes.ui.components.BottomBar
+import com.example.psnotes.ui.components.DrawController
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
 import com.example.psnotes.ui.screens.MapScreen
@@ -24,11 +25,11 @@ import com.example.psnotes.ui.screens.PerfilScreen
 import com.example.psnotes.ui.screens.SplashScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,12 +48,6 @@ class MainActivity : ComponentActivity() {
 
                 val navBackStackEntry = navController.currentBackStackEntryAsState().value
                 val currentRoute = navBackStackEntry?.destination?.route
-
-
-                context.deleteDatabase("Nota")
-                context.deleteDatabase("trabajadores_db")
-                context.deleteDatabase("materiales_db")
-                context.deleteDatabase("clientes_db")
 
 
                 // Crear los ViewModels necesarios
@@ -80,9 +75,17 @@ class MainActivity : ComponentActivity() {
                     }
                 })
 
+                val viewModelMaterial by viewModels<MaterialViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return MaterialViewModel(materialDao) as T
+                        }
+                    }
+                })
+
                 Scaffold(
                     bottomBar = {
-                        if (currentRoute != "Splash" && currentRoute != "InicioSesion") {
+                        if (currentRoute != "Splash" && currentRoute != "InicioSesion" && currentRoute != "Ajustes") {
                             BottomBar(navController, currentRoute.toString())
                         }
                     }) { paddingValues ->
@@ -97,20 +100,19 @@ class MainActivity : ComponentActivity() {
                             InicioSesion(context, paddingValues, viewModelTrabajador, navController)
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelNota, viewModelCliente)
+                            InicioScreen(paddingValues, viewModelNota, viewModelMaterial, viewModelCliente)
                         }
                         composable("Buscar") {
                             MapScreen(paddingValues, context, clienteDao)
                         }
                         composable("Notas") {
-                            NotasScreen(
-                                paddingValues, navController, viewModelNota
-                            )
+                            NotasScreen(paddingValues, navController, viewModelNota)
                         }
                         composable("Perfil") {
                             PerfilScreen(context, navController)
                         }
                         composable("Ajustes") {
+                            //DrawBox(modifier = Modifier.fillMaxSize())
                             //AjustesScreen(paddingValues, navController)
                         }
                     }

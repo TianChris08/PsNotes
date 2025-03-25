@@ -65,14 +65,6 @@ fun TrabajoScreen() {
                 Text(text = String.format("%.2f €", tarifaPorHora), style = typography.titleMedium, color = colorScheme.onBackground)
             }
 
-            Slider(
-                value = tarifaPorHora.toFloat(),
-                onValueChange = { viewModel.setTarifa(it.toDouble()) },
-                valueRange = 0f..100f,
-                steps = 99,
-                modifier = Modifier.fillMaxWidth()
-            )
-
             HorizontalDivider(thickness = 3.dp)
 
             Column(

@@ -10,8 +10,7 @@ data class Material(
     val nombre: String,
     val tipo: String?,
     val categoria: String?,
-    val cantidad: Int?,
-    val precioUnitario: Double?,
+    val precioUnitario: Double,
     val especificaciones: String?,
     val fechaExpiracion: String? = null,
     val estado: String?
