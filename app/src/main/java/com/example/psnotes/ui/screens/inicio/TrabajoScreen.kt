@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
+import java.util.Locale
 
 @Composable
 fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
@@ -39,27 +40,27 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(2.dp)
     ) {
         item {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 5.dp),
+                    .padding(10.dp),
                 horizontalArrangement = Arrangement.Center
             )
             {
-                Text("Trabajo", style = typography.titleLarge, color = colorScheme.onBackground)
+                Text("Trabajo")
             }
 
-            HorizontalDivider(thickness = 3.dp)
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Tarifa por hora (€):", style = typography.titleMedium, color = colorScheme.onBackground)
-                Text(text = String.format("%.2f €", tarifaPorHora), style = typography.titleMedium, color = colorScheme.onBackground)
+                Text("Tarifa por hora (€):")
+                Text(text = String.format(Locale.getDefault(), "%.2f €", tarifaPorHora))
             }
 
             HorizontalDivider(thickness = 3.dp)

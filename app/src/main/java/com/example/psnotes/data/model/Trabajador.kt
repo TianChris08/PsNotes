@@ -11,5 +11,5 @@ data class Trabajador(
     val nombre: String,
     val tarifa: Double,
     val pin: Int,
-    //val notasTrabajo: List<NotaTrabajo>
+    //val notasCreadas: List<Nota>
 )

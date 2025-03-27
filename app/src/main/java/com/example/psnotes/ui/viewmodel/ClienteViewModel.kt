@@ -47,6 +47,15 @@ class ClienteViewModel(
         }
     }
 
+    fun buscarClientePorId(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val commercialName =
+                dao.getTodosClientes().find { it.id == id }?.commercialName.toString()
+            state.nombreComercialCliente = commercialName?.toString() ?: "Cliente no encontrado"
+        }
+
+    }
+
     fun changeFiscalName(fiscalName:String) {
         state = state.copy(nombreFiscalCliente = fiscalName)
 

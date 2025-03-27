@@ -89,13 +89,13 @@ fun BottomBar(navController: NavController, currentRoute: String) {
                         Icon(
                             imageVector = icon,
                             contentDescription = title,
-                            tint = if (selectedItem == title) Color.DarkGray else colorScheme.onBackground
+                            tint = if (selectedItem == title) colorScheme.onPrimaryContainer else colorScheme.onBackground
                         )
                     },
                     label = {
                         Text(
                             title,
-                            color = if (selectedItem == title) Color.DarkGray else colorScheme.onBackground
+                            color = if (selectedItem == title) colorScheme.onPrimaryContainer else colorScheme.onBackground
                         )
                     },
                     selected = selectedItem == title,

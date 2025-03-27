@@ -5,7 +5,7 @@ import com.example.psnotes.data.model.Cliente
 data class ClienteState(
     val clientes: List<Cliente> = emptyList(),
     val nombreFiscalCliente: String = "",
-    val nombreComercialCliente: String = "",
+    var nombreComercialCliente: String = "",
     val telefonoCliente: String = "",
     val correoCliente: String = "",
     val coordenadasNegocio: String? = "",

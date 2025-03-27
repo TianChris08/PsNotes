@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 
 
 @Composable
-fun MapScreen(paddingValues: PaddingValues, context: Context, dao: ClienteDAO) {
+fun MapScreen(paddingValues: PaddingValues, dao: ClienteDAO) {
     // Obtener lista de clientes desde la base de datos
     val clientes = remember { mutableStateOf(emptyList<Cliente>()) }
 

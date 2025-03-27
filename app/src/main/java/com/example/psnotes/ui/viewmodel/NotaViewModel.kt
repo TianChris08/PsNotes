@@ -9,6 +9,9 @@ import com.example.psnotes.data.model.Nota
 import com.example.psnotes.data.repository.NotaDAO
 import com.example.psnotes.data.state.NotaState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -37,6 +40,7 @@ class NotaViewModel(
             }
         }
     }
+
 
     fun changePersonaContacto(nuevaPersonaContacto: String) {
         state = state.copy(personaContacto = nuevaPersonaContacto)
@@ -72,10 +76,11 @@ class NotaViewModel(
 
     fun createNota(
         personaContacto: String,
-        clienteId: String?,
-        trabajadorId: String?,
+        clienteId: String,
+        trabajadorId: String,
+        trabajoRealizado: String?,
         notaCerradaEn: String?,
-        fecha: String?,
+        fecha: String,
         observacionesPublias: String?,
         observacionesPrivadas: String?,
         firmaUri: String?
@@ -85,6 +90,7 @@ class NotaViewModel(
             personaContacto,
             clienteId,
             trabajadorId.toString(),
+            trabajoRealizado.toString(),
             notaCerradaEn,
             fecha.toString(),
             observacionesPublias,
@@ -102,14 +108,29 @@ class NotaViewModel(
         return null
     }
 
+    fun createNota(
+        nota: Nota
+    ) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                notaDao.insertNota(nota)
+            } catch (e: Exception) {
+                errorGeneral = "Error al crear nota: ${e.message}"
+            }
+        }
+
+    }
+
 
     fun createNota() {
         createNota(
             state.personaContacto,
-            state.clienteId,
-            state.trabajadorId,
+            state.clienteId.toString(),
+            state.trabajadorId.toString(),
+            state.trabajoRealizado.toString(),
             state.notaCerradaEn,
-            state.fecha,
+            state.fecha.toString(),
             state.observacionesPublicas,
             state.observacionesPrivadas,
             state.firmaUri

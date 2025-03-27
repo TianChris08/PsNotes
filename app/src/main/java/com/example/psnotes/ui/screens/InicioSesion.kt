@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.psnotes.data.SessionManager
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
@@ -27,8 +28,8 @@ import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 fun InicioSesion(
     context: Context,
     paddingValues: PaddingValues,
-    viewModel: TrabajadorViewModel,
-    navController: NavController
+    navController: NavController,
+    viewModel: TrabajadorViewModel = viewModel(),
 ) {
 
     var nombre by remember { mutableStateOf("") }
@@ -70,9 +71,10 @@ fun InicioSesion(
             onValueChange = { pin = it },
             placeholder = { Text("Pin de inicio sesión") })
 
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
-                checked = recordarUsuario, onCheckedChange = { recordarUsuario = it })
+                checked = recordarUsuario,
+                onCheckedChange = { recordarUsuario = it })
             Text("Iniciar sesión automáticamente")
         }
 
