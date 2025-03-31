@@ -44,8 +44,6 @@ class MainActivity : ComponentActivity() {
 
                 val db = AppDatabaseSingleton.getDatabase(context)
 
-
-
                 // Obtener los DAOs de la base de datos
                 val clienteDao = db.clienteDao
                 val notaDao = db.notaDAO
@@ -95,6 +93,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 })
+
 
 
                 Scaffold(

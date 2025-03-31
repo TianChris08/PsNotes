@@ -2,6 +2,7 @@ package com.example.psnotes.ui.screens.inicio
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -71,14 +73,21 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
         }
     }
 
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            horizontalArrangement = Arrangement.Center)
+        {
+            Text("Materiales")
+        }
+        HorizontalDivider()
         Row {
             TextField(
                 value = searchText,
                 onValueChange = { text ->
                     searchText = text
                     expanded = true
-                    // Opcional: llamar al mét0do de búsqueda del ViewModel
+                    // llamar al mét0do de búsqueda del ViewModel
                     materialViewModel.searchMateriales(text)
                 },
                 label = { Text("Buscar Material") },
