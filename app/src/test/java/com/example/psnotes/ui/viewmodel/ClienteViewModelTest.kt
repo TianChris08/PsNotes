@@ -46,8 +46,8 @@ class ClienteViewModelTest {
         verify(mockDao).insertClient(any())  // Aquí puedes hacer una verificación más específica si es necesario
     }
 
-    @Test
-    fun `test createClient with invalid email returns validation error`() {
+    @org.junit.jupiter.api.Test
+    fun correoInvalidoCrearCliente() {
         // Datos con un correo inválido
         val nombreFiscal = "Nombre Fiscal"
         val nombreComercial = "Nombre Comercial"

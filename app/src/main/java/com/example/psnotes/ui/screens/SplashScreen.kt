@@ -58,7 +58,19 @@ fun SplashScreen(
         }
 
     }
-    LaunchedEffect(Unit) {
+    if (SessionManager.isLoggedIn(context)) {
+        // Si está logueado, navegar a la pantalla principal
+        navController.navigate("Inicio") {
+            popUpTo("Splash") { inclusive = true }
+        }
+    } else {
+        // Si no está logueado, navegar a la pantalla de login
+        navController.navigate("InicioSesion") {
+            popUpTo("Splash") { inclusive = true }
+        }
+    }
+
+    /*LaunchedEffect(Unit) {
         val appDatabase = AppDatabaseSingleton.getDatabase(context)
         initializeData(appDatabase)
 
@@ -74,7 +86,7 @@ fun SplashScreen(
                 popUpTo("Splash") { inclusive = true }
             }
         }
-    }
+    }*/
 
 }
 
@@ -105,6 +117,7 @@ private suspend fun initializeData(appDatabase: AppDatabase) {
             fecha = "2025-02-28",
             observacionesPrivadas = "Observaciones privadas",
             observacionesPublias = "Se portó mal",
+            trabajoRealizado = "trabajo realizado",
             firma = "firmado"
         )
         appDatabase.notaDAO.insertNota(nota)

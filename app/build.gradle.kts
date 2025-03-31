@@ -46,7 +46,6 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")  // Motor de JUnit 5
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.5.21")
 
-    androidTestImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     testImplementation("androidx.compose.ui:ui-test-junit4:1.3.0")

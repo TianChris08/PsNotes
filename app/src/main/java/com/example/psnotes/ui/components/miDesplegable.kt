@@ -20,13 +20,14 @@ import androidx.compose.ui.graphics.Color
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
 @Composable
-fun MiDesplegable(viewModel: ClienteViewModel) {
+fun miDesplegable(modifier: Modifier, viewModel: ClienteViewModel): String {
     val clientes = viewModel.state.clientes
 
+    var clienteId by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecciona un cliente") }
 
-    Column {
+    Column(modifier = modifier) {
         Button(
             onClick = { expanded = !expanded },
             colors = ButtonColors(
@@ -52,9 +53,11 @@ fun MiDesplegable(viewModel: ClienteViewModel) {
                 }, onClick = {
                     selectedOption = cliente.commercialName
                     expanded = false
+                    clienteId = cliente.id
                 })
             }
         }
     }
+    return clienteId
 
 }

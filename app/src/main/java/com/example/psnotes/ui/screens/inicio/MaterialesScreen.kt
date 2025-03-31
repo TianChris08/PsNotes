@@ -2,6 +2,7 @@ package com.example.psnotes.ui.screens.inicio
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +13,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.DropdownMenuItem
+
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
@@ -23,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +45,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.psnotes.data.model.Material
+import com.example.psnotes.ui.components.NuevoMaterialDialog
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import java.util.UUID
 
@@ -70,14 +73,21 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
         }
     }
 
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            horizontalArrangement = Arrangement.Center)
+        {
+            Text("Materiales")
+        }
+        HorizontalDivider()
         Row {
             TextField(
                 value = searchText,
                 onValueChange = { text ->
                     searchText = text
                     expanded = true
-                    // Opcional: llamar al mét0do de búsqueda del ViewModel
+                    // llamar al mét0do de búsqueda del ViewModel
                     materialViewModel.searchMateriales(text)
                 },
                 label = { Text("Buscar Material") },
@@ -123,10 +133,10 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                             if (!selectedMaterials.containsKey(material.nombre)) {
                                 selectedMaterials[material.nombre] = 0
                             }
-                        }
-                    ) {
-                        Text(material.nombre)
-                    }
+                        },
+                        text = { Text(material.nombre) },
+
+                    )
                 }
             }
 
@@ -204,7 +214,9 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                                     cantidad = quantity
                                 )),
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                                modifier = Modifier.padding(horizontal = 8.dp).weight(0.3f),
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .weight(0.3f),
                                 textAlign = TextAlign.Center
                             )
 
@@ -218,153 +230,28 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                     }
                 }
             }
+            item {
+                Button(
+                    onClick = {
+                        showDialog = true
+                    }, modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) { Text("Crear Material") }
+            }
         }
 
-        Button(
-            onClick = {
-                showDialog = true
-            }, modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) { Text("Crear Material") }
+
 
         if (showDialog) {
-            AddMaterialDialog(
+            NuevoMaterialDialog(
                 onDismiss = { showDialog = false },
                 onAdd = { material ->
                     // Usar el ViewModel para insertar el material en la base de datos
                     materialViewModel.createMaterial(material)
                     selectedMaterials[material.nombre] = 0 // Añadir a la lista de seleccionados con cantidad 0
                     showDialog = false
-                },
-                materialViewModel = materialViewModel
+                }
             )
         }
     }
 }
 
-@Composable
-fun AddMaterialDialog(
-    onDismiss: () -> Unit,
-    onAdd: (Material) -> Unit,
-    materialViewModel: MaterialViewModel
-) {
-    var materialName by remember { mutableStateOf("") }
-    var tipoMaterial by remember { mutableStateOf("") }
-    var estadoMaterial by remember { mutableStateOf("") }
-    var precioUnitarioMaterial by remember { mutableStateOf("") }
-    var especificacionesMaterial by remember { mutableStateOf("") }
-    var fechaExpiracionMaterial by remember { mutableStateOf("") }
-    val tipos = listOf("Tipo1", "Tipo2", "Tipo3") // Enum con tipos
-    val estados = listOf("Nuevo", "Usado", "Dañado") // Enum con estados
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Añadir Nuevo Material") },
-        text = {
-            LazyColumn {
-                item {
-                    TextField(
-                        value = materialName,
-                        onValueChange = { materialName = it },
-                        label = { Text("Nombre del Material") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                /*item {
-                    DropdownMenu(
-                        expanded = true,
-                        onDismissRequest = { /* Implementar el cierre del desplegable */ }
-                    ) {
-                        tipos.forEach { tipo ->
-                            DropdownMenuItem(onClick = { tipoMaterial = tipo }) {
-                                Text(tipo)
-                            }
-                        }
-                    }
-                }*/
-                /*item {
-                    DropdownMenu(
-                        expanded = true,
-                        onDismissRequest = { /* Implementar el cierre del desplegable */ }
-                    ) {
-                        estados.forEach { estado ->
-                            DropdownMenuItem(onClick = { estadoMaterial = estado }) {
-                                Text(estado)
-                            }
-                        }
-                    }
-                }*/
-                item {
-                    TextField(
-                        value = precioUnitarioMaterial,
-                        onValueChange = { newValue ->
-                            // Permitir solo números y un punto decimal
-                            val filteredValue =
-                                newValue.replace(",", ".") // Cambiar comas por puntos
-                                    .filter { it.isDigit() || it == '.' }
-
-                            // Asegurar solo un punto decimal
-                            val parts = filteredValue.split('.')
-                            val formattedValue = if (parts.size > 2) {
-                                parts.first() + "." + parts.drop(1).first()
-                            } else {
-                                filteredValue
-                            }
-
-                            // Limitar a dos decimales
-                            val decimalParts = formattedValue.split('.')
-                            precioUnitarioMaterial = if (decimalParts.size > 1) {
-                                decimalParts[0] + "." + decimalParts[1].take(2)
-                            } else {
-                                formattedValue
-                            }
-                        },
-                        label = { Text("Precio Unitario") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                item {
-                    TextField(
-                        value = especificacionesMaterial,
-                        onValueChange = { especificacionesMaterial = it },
-                        label = { Text("Especificaciones") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                item {
-                    TextField(
-                        value = fechaExpiracionMaterial,
-                        onValueChange = { fechaExpiracionMaterial = it },
-                        label = { Text("Fecha de Expiración") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    // Crear material
-                    val material = Material(
-                        UUID.randomUUID().toString(),
-                        materialName,
-                        tipoMaterial,
-                        estadoMaterial,
-                        precioUnitarioMaterial.toDouble(),
-                        especificacionesMaterial,
-                        fechaExpiracionMaterial,
-                        estadoMaterial
-                    )
-                    onAdd(material)
-                }
-            ) {
-                Text("Añadir")
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text("Cancelar")
-            }
-        }
-    )
-}

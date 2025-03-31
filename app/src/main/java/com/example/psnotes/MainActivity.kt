@@ -1,6 +1,8 @@
 package com.example.psnotes
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,6 +29,7 @@ import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
+import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
@@ -49,7 +52,6 @@ class MainActivity : ComponentActivity() {
 
                 val navBackStackEntry = navController.currentBackStackEntryAsState().value
                 val currentRoute = navBackStackEntry?.destination?.route
-
 
                 // Crear los ViewModels necesarios
                 val viewModelCliente by viewModels<ClienteViewModel>(factoryProducer = {
@@ -84,9 +86,19 @@ class MainActivity : ComponentActivity() {
                     }
                 })
 
+                val viewModelObservaciones by viewModels<ObservacionesViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return ObservacionesViewModel() as T
+                        }
+                    }
+                })
+
+
+
                 Scaffold(
                     bottomBar = {
-                        if (currentRoute != "Splash" && currentRoute != "InicioSesion" && currentRoute != "Ajustes") {
+                        if (currentRoute != "Splash" && currentRoute != "InicioSesion") {
                             BottomBar(navController, currentRoute.toString())
                         }
                     }) { paddingValues ->
@@ -98,16 +110,18 @@ class MainActivity : ComponentActivity() {
                             SplashScreen(context,navController)
                         }
                         composable("InicioSesion") {
-                            InicioSesion(context, paddingValues, viewModelTrabajador, navController)
+                            InicioSesion(
+                                context, paddingValues, navController, viewModelTrabajador
+                            )
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente)
+                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente, viewModelNota, viewModelObservaciones, context)
                         }
                         composable("Buscar") {
-                            MapScreen(paddingValues, context, clienteDao)
+                            MapScreen(paddingValues, clienteDao)
                         }
                         composable("Notas") {
-                            NotasScreen(paddingValues, navController, viewModelNota)
+                            NotasScreen(paddingValues, viewModelNota, viewModelCliente)
                         }
                         composable("Perfil") {
                             PerfilScreen(context, navController)
