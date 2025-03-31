@@ -11,6 +11,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +40,16 @@ fun NotasScreen(
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(notasSize) { nota ->
+                val clienteId = notasViewModel.state.notas[nota].clienteId.toString()
+                val nombreCliente = remember { mutableStateOf("Cargando...") }
+
+                LaunchedEffect(clienteId) {
+                    clienteViewModel.buscarClientePorId(clienteId)
+                }
+
+                // Observar cambios en el nombre del cliente
+                nombreCliente.value = clienteViewModel.nombreCliente ?: "Desconocido"
+
                 Card(modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()) {
@@ -47,7 +60,7 @@ fun NotasScreen(
                             )
                         HorizontalDivider()
 
-                        Text(text = "Empresa: ${clienteViewModel.state.nombreComercialCliente}")
+                        Text(text = "Empresa: ${nombreCliente.value}")
                         Text(text = "Persona de contacto: ${notasViewModel.state.notas[nota].personaContacto}")
                         Text(text = "Fecha: ${notasViewModel.state.notas[nota].fecha ?: "Fecha no disponible"}")
                         Text(text = "Observaciones públicas: ${notasViewModel.state.notas[nota].observacionesPublias ?: "Sin observaciones"}")

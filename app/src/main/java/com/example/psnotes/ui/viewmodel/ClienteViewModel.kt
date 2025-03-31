@@ -10,8 +10,10 @@ import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteDAO
 import com.example.psnotes.data.state.ClienteState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import java.util.regex.Pattern
 
@@ -26,6 +28,9 @@ class ClienteViewModel(
 
     var errorGeneral by mutableStateOf<String?>(null)
         private set
+
+    private val _nombreCliente = mutableStateOf<String?>(null)
+    val nombreCliente: String? get() = _nombreCliente.value
 
     init {
         viewModelScope.launch {
@@ -49,11 +54,11 @@ class ClienteViewModel(
 
     fun buscarClientePorId(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val commercialName =
-                dao.getTodosClientes().find { it.id == id }?.commercialName.toString()
-            state.nombreComercialCliente = commercialName?.toString() ?: "Cliente no encontrado"
+            val cliente = dao.getClientePorId(id) // Asegúrate de que devuelve un objeto Cliente
+            withContext(Dispatchers.Main) {
+                _nombreCliente.value = cliente.commercialName ?: "Cliente no encontrado"
+            }
         }
-
     }
 
     fun changeFiscalName(fiscalName:String) {

@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.Color
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
 @Composable
-fun miDesplegable(modifier: Modifier, viewModel: ClienteViewModel): String {
-    val clientes = viewModel.state.clientes
+fun miDesplegable(modifier: Modifier, clienteViewModel: ClienteViewModel): String {
+    val clientes = clienteViewModel.state.clientes
 
     var clienteId by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -44,7 +44,9 @@ fun miDesplegable(modifier: Modifier, viewModel: ClienteViewModel): String {
         }
 
         DropdownMenu(
-            expanded = expanded, onDismissRequest = { expanded = false }) {
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
             clientes.forEach { cliente ->
                 DropdownMenuItem(text = {
                     Text(

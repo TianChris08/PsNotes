@@ -24,6 +24,9 @@ interface ClienteDAO {
     @Delete
     fun deleteClient(cliente: Cliente)
 
+    @Query("SELECT * FROM Cliente WHERE id = :id LIMIT 1")
+    fun getClientePorId(id: String): Cliente
+
     /*@Transaction
     @Query("SELECT * FROM Cliente WHERE id = :clienteId")
     fun obtenerClienteConNotas(clienteId: String): ClienteConNotas*/

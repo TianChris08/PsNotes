@@ -39,10 +39,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.data.model.Nota
 import com.example.psnotes.ui.components.miDesplegable
@@ -74,14 +72,13 @@ fun InicioScreen(
     observacionesViewModel: ObservacionesViewModel = viewModel(),
     context: Context
 ) {
-
     val trabajoViewModel: TrabajoViewModel = viewModel()
     val permissionViewModel: PermissionViewModel = viewModel()
 
     var clienteId by remember { mutableStateOf("") }
     var personaContacto by remember { mutableStateOf("") }
 
-    val precioTodosMateriales = viewModelMaterial.sumarPrecioMateriales()
+    val precioMateriales = viewModelMaterial.sumarPrecioMateriales()
     val precioManoDeObra by trabajoViewModel.precioManoDeObra.collectAsState()
 
     val selectedSection = remember { mutableStateOf("trabajo") }
@@ -150,7 +147,7 @@ fun InicioScreen(
                 ) {
                     clienteId = miDesplegable(
                         modifier = Modifier.padding(top = 5.dp),
-                        viewModel = clienteViewModel
+                        clienteViewModel = clienteViewModel
                     )
 
                     IconButton(
@@ -269,7 +266,7 @@ fun InicioScreen(
                         ),
                         color = colorScheme.onBackground
                     )*/
-                    Text("Total: ${precioManoDeObra + viewModelMaterial.sumarPrecioMateriales()}",
+                    Text("Total: ${precioManoDeObra + precioMateriales}",
                     color = colorScheme.onBackground
                     )
                 }

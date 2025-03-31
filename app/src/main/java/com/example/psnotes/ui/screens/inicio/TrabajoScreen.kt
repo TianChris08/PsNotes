@@ -31,11 +31,10 @@ import java.util.Locale
 @Composable
 fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
 
-
     val tiempoTrabajado by trabajoViewModel.tiempoTrabajado.collectAsState()
     var trabajoRealizado by rememberSaveable { mutableStateOf(trabajoViewModel.trabajoRealizado.value) }
     val precioEstimado by trabajoViewModel.precioManoDeObra.collectAsState()
-    var tarifaPorHora = trabajoViewModel.tarifaPorHora.collectAsState().value
+    val tarifaPorHora = trabajoViewModel.tarifaPorHora.collectAsState().value
 
     LazyColumn(
         modifier = Modifier

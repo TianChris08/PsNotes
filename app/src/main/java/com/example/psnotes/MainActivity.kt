@@ -1,8 +1,5 @@
 package com.example.psnotes
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -53,7 +50,6 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry = navController.currentBackStackEntryAsState().value
                 val currentRoute = navBackStackEntry?.destination?.route
 
-                // Crear los ViewModels necesarios
                 val viewModelCliente by viewModels<ClienteViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -93,7 +89,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 })
-
 
 
                 Scaffold(

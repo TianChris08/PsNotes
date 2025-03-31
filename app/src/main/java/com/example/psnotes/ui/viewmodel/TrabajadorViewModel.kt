@@ -29,12 +29,6 @@ class TrabajadorViewModel(
         }
     }
 
-    fun changeCodigoTrabajador(codigo:Int) {
-        state = state.copy(
-            codigoTrabajador = codigo
-        )
-    }
-
     fun changeNombre(nombre:String) {
         state = state.copy(
             nombre = nombre
@@ -66,20 +60,18 @@ class TrabajadorViewModel(
     fun createTrabajador() {
         val trabajador = Trabajador(
             UUID.randomUUID().toString(),
-            //state.codigoTrabajador,
             state.nombre,
             state.tarifa,
-            state.pin,
+            state.pin
         )
         viewModelScope.launch(Dispatchers.IO) {
             dao.insertTrabajador(trabajador)
         }
     }
 
-    fun createTrabajador(/*codigoTrabajador:Int,*/ nombre: String, tarifa: Double, pin: Int) {
+    fun createTrabajador(nombre: String, tarifa: Double, pin: Int) {
         val trabajador = Trabajador(
             UUID.randomUUID().toString(),
-            //codigoTrabajador,
             nombre,
             tarifa,
             pin

@@ -70,7 +70,7 @@ fun SplashScreen(
         }
     }
 
-    /*LaunchedEffect(Unit) {
+    LaunchedEffect(Unit) {
         val appDatabase = AppDatabaseSingleton.getDatabase(context)
         initializeData(appDatabase)
 
@@ -86,7 +86,7 @@ fun SplashScreen(
                 popUpTo("Splash") { inclusive = true }
             }
         }
-    }*/
+    }
 
 }
 
@@ -100,15 +100,15 @@ private suspend fun initializeData(appDatabase: AppDatabase) {
 
         val cliente = Cliente(
             id = UUID.randomUUID().toString(),
-            fiscalName = "fiscal",
-            commercialName = "comercial",
+            fiscalName = "Marc Pensi",
+            commercialName = "Pensisoft",
             telefono = "345345345",
-            correo = "345@gmail.com",
+            correo = "marcpensi@gmail.com",
             coordenadasNegocio = "39.9946, -0.0690"
         )
         appDatabase.clienteDao.insertClient(cliente)
 
-        val nota = Nota(
+        /*val nota = Nota(
             id = UUID.randomUUID().toString(),
             personaContacto = "John Doe",
             clienteId = "cliente1",
@@ -120,6 +120,6 @@ private suspend fun initializeData(appDatabase: AppDatabase) {
             trabajoRealizado = "trabajo realizado",
             firma = "firmado"
         )
-        appDatabase.notaDAO.insertNota(nota)
+        appDatabase.notaDAO.insertNota(nota)*/
     }
 }

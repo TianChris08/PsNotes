@@ -44,7 +44,6 @@ class TrabajoViewModel : ViewModel() {
 
     private fun actualizarPrecio() {
         _precioManoDeObra.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
-
     }
 
 }
