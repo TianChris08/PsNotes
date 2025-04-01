@@ -15,10 +15,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 
@@ -63,6 +61,7 @@ fun NotasScreen(
                         Text(text = "Empresa: ${nombreCliente.value}")
                         Text(text = "Persona de contacto: ${notasViewModel.state.notas[nota].personaContacto}")
                         Text(text = "Fecha: ${notasViewModel.state.notas[nota].fecha ?: "Fecha no disponible"}")
+                        Text(text = "Trabajo realizado: ${notasViewModel.state.notas[nota].trabajoRealizado}")
                         Text(text = "Observaciones públicas: ${notasViewModel.state.notas[nota].observacionesPublias ?: "Sin observaciones"}")
                         Text(text = "Observaciones privadas: ${notasViewModel.state.notas[nota].observacionesPrivadas ?: "Sin observaciones"}")
                     }
