@@ -1,5 +1,6 @@
 package com.example.psnotes.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,24 +23,27 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.psnotes.ui.components.MiDesplegable
+import com.example.psnotes.data.model.Nota
+import com.example.psnotes.ui.components.miDesplegable
 import com.example.psnotes.ui.components.NuevoClienteForm
 import com.example.psnotes.ui.components.PermissionScreen
 import com.example.psnotes.ui.screens.inicio.FirmaScreen
@@ -48,19 +52,41 @@ import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
 import com.example.psnotes.ui.screens.inicio.Observaciones2Screen
 import com.example.psnotes.ui.screens.inicio.TrabajoScreen
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.MaterialViewModel
+import com.example.psnotes.ui.viewmodel.NotaViewModel
+import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
 import com.example.psnotes.ui.viewmodel.PermissionViewModel
+import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 import com.google.android.libraries.places.api.Places
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.UUID
+
 
 @Composable
 fun InicioScreen(
-    paddingValues: PaddingValues, clienteViewModel: ClienteViewModel
+    paddingValues: PaddingValues,
+    viewModelMaterial: MaterialViewModel = viewModel(),
+    clienteViewModel: ClienteViewModel = viewModel(),
+    notaViewModel: NotaViewModel = viewModel(),
+    observacionesViewModel: ObservacionesViewModel = viewModel(),
+    context: Context
 ) {
-    val context = LocalContext.current
-
+    val trabajoViewModel: TrabajoViewModel = viewModel()
     val permissionViewModel: PermissionViewModel = viewModel()
-    val selectedSection = remember { mutableStateOf("trabajo") }
-    val showDialog = remember { mutableStateOf(false) }
 
+    var clienteId by remember { mutableStateOf("") }
+    var personaContacto by remember { mutableStateOf("") }
+
+    val precioMateriales = viewModelMaterial.sumarPrecioMateriales()
+    val precioManoDeObra by trabajoViewModel.precioManoDeObra.collectAsState()
+
+    val selectedSection = remember { mutableStateOf("trabajo") }
+    val mostrarFormularioNuevoCliente = remember { mutableStateOf(false) }
+
+    val observacionesPublicas by observacionesViewModel.observacionesPublicas.collectAsState()
+    val observacionesPrivadas by observacionesViewModel.observacionesPrivadas.collectAsState()
+    val trabajoRealizado by trabajoViewModel.trabajoRealizado
 
     Column(
         modifier = Modifier
@@ -96,7 +122,7 @@ fun InicioScreen(
         // 🔹 Parte Superior - Información fija
         Row(modifier = Modifier
             .fillMaxSize()
-            .weight(0.20f)
+            .weight(0.25f)
             .background(colorScheme.surface)
         ) {
             Column(
@@ -105,28 +131,38 @@ fun InicioScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text(
+                /*Text(
                     text = "Información Principal",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = colorScheme.onBackground
-                )
-                HorizontalDivider(color = colorScheme.background)
+                )*/
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 8.dp),
+                        .padding(top = 8.dp)
+                        .weight(0.5f),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    MiDesplegable(viewModel = clienteViewModel)
+                    clienteId = miDesplegable(
+                        modifier = Modifier.padding(top = 5.dp),
+                        clienteViewModel = clienteViewModel
+                    )
+
                     IconButton(
                         onClick = {
-                            showDialog.value = true
+                            mostrarFormularioNuevoCliente.value = true
                         },
+                        colors = IconButtonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onBackground,
+                            disabledContainerColor = Color.DarkGray,
+                            disabledContentColor = Color.Gray
+                        ),
                         modifier = Modifier
-                            .padding(start = 8.dp)
+                            .padding(top = 5.dp, start = 8.dp)
                             .clip(RoundedCornerShape(60.dp))
-                            .background(colorScheme.primaryContainer)
                     ) {
                         Icon(
                             Icons.Outlined.Add,
@@ -135,12 +171,26 @@ fun InicioScreen(
                         )
                     }
                 }
+                Row(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 8.dp)
+                    .weight(0.5f),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    TextField(
+                        value = personaContacto,
+                        onValueChange = { personaContacto = it },
+                        label = { Text("Persona de contacto") }
+                    )
+                }
+
             }
         }
 
-        if (showDialog.value) {
+        if (mostrarFormularioNuevoCliente.value) {
             NuevoClienteForm(
-                onDismiss = { showDialog.value = false }, clienteViewModel = clienteViewModel
+                onDismiss = { mostrarFormularioNuevoCliente.value = false },
+                clienteViewModel = clienteViewModel
             )
         }
 
@@ -150,7 +200,7 @@ fun InicioScreen(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(0.65f),
+                .weight(0.60f),
         ) {
             Column(
                 modifier = Modifier
@@ -159,8 +209,8 @@ fun InicioScreen(
                     .background(colorScheme.background)
             ) {
                 when (selectedSection.value) {
-                    "trabajo" -> TrabajoScreen()
-                    "materiales" -> MaterialesScreen()
+                    "trabajo" -> TrabajoScreen(trabajoViewModel)
+                    "materiales" -> MaterialesScreen(viewModelMaterial)
                     "firma" -> FirmaScreen()
                     "observaciones1" -> Observaciones1Screen()
                     "observaciones2" -> Observaciones2Screen()
@@ -173,7 +223,6 @@ fun InicioScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
-                val shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
 
                 listOf(
                     Icons.Outlined.WorkOutline to "trabajo",
@@ -183,11 +232,13 @@ fun InicioScreen(
                     Icons.Outlined.NoteAlt to "observaciones2"
                 ).forEach { (icon, text) ->
                     FloatingActionButton(
-                        onClick = { selectedSection.value = text },
-                        shape = shape,
+                        onClick = {
+                            selectedSection.value = text
+                        },
+                        //shape = shape,
                         modifier = Modifier.padding(vertical = 4.dp),
-                        contentColor = colorScheme.onBackground,
-                        containerColor = colorScheme.tertiary
+                        contentColor = if (selectedSection.value == text) colorScheme.onPrimary else colorScheme.onBackground,
+                        containerColor = if (selectedSection.value == text) colorScheme.tertiary else colorScheme.primary
                     ) {
                         Icon(icon, contentDescription = text)
                     }
@@ -207,9 +258,16 @@ fun InicioScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center) {
                 Row(horizontalArrangement = Arrangement.Center) {
-                    Text(
-                        "Horas trabajo: X h     Total: X €",
+                    /*Text(
+                        "Mano de obra: %.2f €   \nMateriales: %.2f €   \nTotal: %.2f €".format(
+                            precioManoDeObra,
+                            precioTodosMateriales,
+                            precioManoDeObra + viewModelMaterial.sumarPrecioMateriales()
+                        ),
                         color = colorScheme.onBackground
+                    )*/
+                    Text("Total: ${precioManoDeObra + precioMateriales}",
+                    color = colorScheme.onBackground
                     )
                 }
                 Button(
@@ -219,10 +277,28 @@ fun InicioScreen(
                         disabledContainerColor = colorScheme.surfaceVariant,
                         disabledContentColor = colorScheme.onSurfaceVariant
                     ),
-                    onClick = { /*guardarNota()*/ },
+                    onClick = {
+                        val nota = Nota(
+                            id = UUID.randomUUID().toString(),
+                            personaContacto = personaContacto,
+                            clienteId = clienteId,
+                            trabajadorId = UUID.randomUUID().toString(),
+                            trabajoRealizado = trabajoRealizado,
+                            notaCerradaEn = LocalDateTime.now().toString(),
+                            fecha = LocalDate.now().toString(),
+                            observacionesPublias = observacionesPublicas,
+                            observacionesPrivadas = observacionesPrivadas,
+                            firma = "firmado"
+                        )
+                        /*notaViewModel.state.clienteId = clienteId
+                        notaViewModel.state.nombreCliente = clienteViewModel.buscarClientePorId(clienteId)
+                        notaViewModel.state.personaContacto = personaContacto*/
+                        notaViewModel.createNota(nota)
+                    },
                 ) {
                     Text(
                         text = "Guardar Nota",
+                        color = colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
                 }

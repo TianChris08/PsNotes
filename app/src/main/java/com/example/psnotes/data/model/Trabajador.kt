@@ -7,9 +7,8 @@ import androidx.room.PrimaryKey
 data class Trabajador(
     @PrimaryKey(autoGenerate = false)
     val id: String,
-    //val codigoTrabajador: Int,
     val nombre: String,
     val tarifa: Double,
     val pin: Int,
-    //val notasTrabajo: List<NotaTrabajo>
+    //val notasCreadas: List<Nota>
 )

@@ -13,21 +13,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
-import com.example.psnotes.data.database.ClienteTable
-import com.example.psnotes.data.database.MaterialTable
-import com.example.psnotes.data.database.NotasTable
-import com.example.psnotes.data.database.TrabajadorTable
+import com.example.psnotes.data.AppDatabaseSingleton
 import com.example.psnotes.ui.components.BottomBar
+import com.example.psnotes.ui.components.DrawController
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
 import com.example.psnotes.ui.screens.MapScreen
 import com.example.psnotes.ui.screens.NotasScreen
+import com.example.psnotes.ui.screens.PerfilScreen
 import com.example.psnotes.ui.screens.SplashScreen
 import com.example.psnotes.ui.theme.PsNotesTheme
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
+import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
+import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
+import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,31 +39,17 @@ class MainActivity : ComponentActivity() {
                 val context = LocalContext.current
                 val navController = rememberNavController()
 
-                val navBackStackEntry = navController.currentBackStackEntryAsState().value
+                val db = AppDatabaseSingleton.getDatabase(context)
 
-                // Get the current destination route
+                // Obtener los DAOs de la base de datos
+                val clienteDao = db.clienteDao
+                val notaDao = db.notaDAO
+                val materialDao = db.materialDao
+                val trabajadorDao = db.trabajadorDAO
+
+                val navBackStackEntry = navController.currentBackStackEntryAsState().value
                 val currentRoute = navBackStackEntry?.destination?.route
 
-                //context.deleteDatabase("clientes_db2")
-
-                // BASE DE DATOS TRABAJADORES
-                val dbTrabajadores = Room.databaseBuilder(this, TrabajadorTable::class.java, "trabajadores_db").build()
-                val trabajadorDao = dbTrabajadores.trabajadorDAO
-                val viewModelTrabajador by viewModels<TrabajadorViewModel>(factoryProducer = {
-                    object : ViewModelProvider.Factory {
-                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return TrabajadorViewModel(trabajadorDao) as T
-                        }
-                    }
-                })
-
-                // BASE DE DATOS MATERIALES(TODO)
-                val dbMateriales = Room.databaseBuilder(this, MaterialTable::class.java, "materiales_db").build()
-                val MaterialesDao = dbMateriales.materialDao
-
-                // BASE DE DATOS DE CLIENTES
-                val dbClientes = Room.databaseBuilder(this, ClienteTable::class.java, "clientes_db").build()
-                val clienteDao = dbClientes.clienteDao
                 val viewModelCliente by viewModels<ClienteViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -71,24 +58,42 @@ class MainActivity : ComponentActivity() {
                     }
                 })
 
-                // BASE DE DATOS DE NOTAS
-                val dbNotas = Room.databaseBuilder(this, NotasTable::class.java, "notas_db").build()
-                val notasDao = dbNotas.notaDAO
-                val viewModelNotas by viewModels<NotaViewModel>(factoryProducer = {
+                val viewModelNota by viewModels<NotaViewModel>(factoryProducer = {
                     object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return NotaViewModel(
-                                notaDao = notasDao,
-                                trabajadorDao = trabajadorDao,
-                                clienteDao = clienteDao
-                            ) as T
+                            return NotaViewModel(notaDao) as T
                         }
                     }
                 })
 
+                val viewModelTrabajador by viewModels<TrabajadorViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return TrabajadorViewModel(trabajadorDao) as T
+                        }
+                    }
+                })
+
+                val viewModelMaterial by viewModels<MaterialViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return MaterialViewModel(materialDao) as T
+                        }
+                    }
+                })
+
+                val viewModelObservaciones by viewModels<ObservacionesViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return ObservacionesViewModel() as T
+                        }
+                    }
+                })
+
+
                 Scaffold(
                     bottomBar = {
-                        if (currentRoute != "Splash") {
+                        if (currentRoute != "Splash" && currentRoute != "InicioSesion") {
                             BottomBar(navController, currentRoute.toString())
                         }
                     }) { paddingValues ->
@@ -97,24 +102,27 @@ class MainActivity : ComponentActivity() {
                         startDestination = "Splash",
                     ) {
                         composable("Splash") {
-                            SplashScreen(navController)
+                            SplashScreen(context,navController)
                         }
                         composable("InicioSesion") {
-                            InicioSesion(paddingValues, viewModelTrabajador, navController)
+                            InicioSesion(
+                                context, paddingValues, navController, viewModelTrabajador
+                            )
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelCliente)
+                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente, viewModelNota, viewModelObservaciones, context)
                         }
                         composable("Buscar") {
-                            MapScreen(paddingValues, context, clienteDao)
+                            MapScreen(paddingValues, clienteDao)
                         }
                         composable("Notas") {
-                            NotasScreen(paddingValues, navController, viewModelNotas)
+                            NotasScreen(paddingValues, viewModelNota, viewModelCliente)
                         }
                         composable("Perfil") {
-                            //PerfilScreen(paddingValues, navController)
+                            PerfilScreen(context, navController)
                         }
                         composable("Ajustes") {
+                            //DrawBox(modifier = Modifier.fillMaxSize())
                             //AjustesScreen(paddingValues, navController)
                         }
                     }

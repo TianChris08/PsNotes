@@ -13,25 +13,16 @@ import kotlinx.coroutines.withContext
 
 class TrabajoViewModel : ViewModel() {
 
-    var _tiempoTrabajado = MutableStateFlow(0)
+    private var _tiempoTrabajado = MutableStateFlow(0)
     val tiempoTrabajado: StateFlow<Int> = _tiempoTrabajado.asStateFlow()
 
     var trabajoRealizado = mutableStateOf("")
 
-    private val _precioEstimado = MutableStateFlow(0.0)
-    val precioEstimado: StateFlow<Double> = _precioEstimado.asStateFlow()
+    private val _precioManoDeObra = MutableStateFlow(0.0)
+    val precioManoDeObra: StateFlow<Double> = _precioManoDeObra.asStateFlow()
 
     private val _tarifaPorHora = MutableStateFlow(10.0) // Tarifa por defecto (10€/h)
     val tarifaPorHora: StateFlow<Double> = _tarifaPorHora.asStateFlow()
-
-    fun setTarifa(nuevaTarifa: Double) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _tarifaPorHora.value = nuevaTarifa
-            withContext(Dispatchers.Main) {
-                actualizarPrecio()
-            }
-        }
-    }
 
     fun incrementarTiempo() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,8 +43,7 @@ class TrabajoViewModel : ViewModel() {
     }
 
     private fun actualizarPrecio() {
-        _precioEstimado.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
-
+        _precioManoDeObra.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
     }
 
 }

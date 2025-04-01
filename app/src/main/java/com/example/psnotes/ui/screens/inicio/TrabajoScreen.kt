@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -27,52 +25,42 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
+import java.util.Locale
 
 @Composable
-fun TrabajoScreen() {
+fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
 
-    val viewModel: TrabajoViewModel = viewModel()
-
-    val tiempoTrabajado by viewModel.tiempoTrabajado.collectAsState()
-    var trabajoRealizado by rememberSaveable { mutableStateOf(viewModel.trabajoRealizado.value) }
-    val precioEstimado by viewModel.precioEstimado.collectAsState()
-    var tarifaPorHora = viewModel.tarifaPorHora.collectAsState().value
+    val tiempoTrabajado by trabajoViewModel.tiempoTrabajado.collectAsState()
+    var trabajoRealizado by rememberSaveable { mutableStateOf(trabajoViewModel.trabajoRealizado.value) }
+    val precioEstimado by trabajoViewModel.precioManoDeObra.collectAsState()
+    val tarifaPorHora = trabajoViewModel.tarifaPorHora.collectAsState().value
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(2.dp)
     ) {
         item {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 5.dp),
+                    .padding(10.dp),
                 horizontalArrangement = Arrangement.Center
             )
             {
-                Text("Trabajo", style = typography.titleLarge, color = colorScheme.onBackground)
+                Text("Trabajo")
             }
 
-            HorizontalDivider(thickness = 3.dp)
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Tarifa por hora (€):", style = typography.titleMedium, color = colorScheme.onBackground)
-                Text(text = String.format("%.2f €", tarifaPorHora), style = typography.titleMedium, color = colorScheme.onBackground)
+                Text("Tarifa por hora (€):")
+                Text(text = String.format(Locale.getDefault(), "%.2f €", tarifaPorHora))
             }
-
-            Slider(
-                value = tarifaPorHora.toFloat(),
-                onValueChange = { viewModel.setTarifa(it.toDouble()) },
-                valueRange = 0f..100f,
-                steps = 99,
-                modifier = Modifier.fillMaxWidth()
-            )
 
             HorizontalDivider(thickness = 3.dp)
 
@@ -93,7 +81,7 @@ fun TrabajoScreen() {
                     value = trabajoRealizado,
                     onValueChange = {
                         trabajoRealizado = it
-                        viewModel.trabajoRealizado.value = it
+                        trabajoViewModel.trabajoRealizado.value = it
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -102,7 +90,7 @@ fun TrabajoScreen() {
                         .border(
                             width = 1.dp,
                             color = colorScheme.primary,
-                            shape = RoundedCornerShape(8.dp)
+                            //shape = RoundedCornerShape(8.dp)
                         ),
                     placeholder = { Text("Escribe aquí...") }
                 )
@@ -123,7 +111,7 @@ fun TrabajoScreen() {
                 ) {
                     IconButton(
                         onClick = {
-                            viewModel.decrementarTiempo()
+                            trabajoViewModel.decrementarTiempo()
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -138,7 +126,7 @@ fun TrabajoScreen() {
                     )
                     IconButton(
                         onClick = {
-                            viewModel.incrementarTiempo()
+                            trabajoViewModel.incrementarTiempo()
                         },
                         modifier = Modifier
                             .weight(1f)

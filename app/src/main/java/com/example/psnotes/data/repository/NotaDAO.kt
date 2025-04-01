@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 interface NotaDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNota(nota: Nota)
+    fun insertNota(nota: Nota)
 
     @Query("SELECT * FROM Nota")
-    suspend fun getNotasFlow() : Flow<List<Nota>>
+    fun getNotasFlow() : Flow<List<Nota>>
 
     @Query("SELECT * FROM Nota")
     suspend fun getNotas(): List<Nota>

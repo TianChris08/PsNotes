@@ -15,21 +15,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.psnotes.ui.viewmodel.ClienteViewModel
 
 @Composable
-fun MiDesplegable(viewModel: ClienteViewModel) {
-    val clientes = viewModel.state.clientes
+fun miDesplegable(modifier: Modifier, clienteViewModel: ClienteViewModel): String {
+    val clientes = clienteViewModel.state.clientes
 
+    var clienteId by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecciona un cliente") }
 
-
-    Column {
+    Column(modifier = modifier) {
         Button(
-            onClick = { expanded = !expanded }, colors = ButtonColors(
-                containerColor = colorScheme.tertiary,
+            onClick = { expanded = !expanded },
+            colors = ButtonColors(
+                containerColor = colorScheme.primary,
                 contentColor = colorScheme.onBackground,
                 disabledContainerColor = Color.DarkGray,
                 disabledContentColor = Color.Gray
@@ -42,7 +44,9 @@ fun MiDesplegable(viewModel: ClienteViewModel) {
         }
 
         DropdownMenu(
-            expanded = expanded, onDismissRequest = { expanded = false }) {
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
             clientes.forEach { cliente ->
                 DropdownMenuItem(text = {
                     Text(
@@ -51,9 +55,11 @@ fun MiDesplegable(viewModel: ClienteViewModel) {
                 }, onClick = {
                     selectedOption = cliente.commercialName
                     expanded = false
+                    clienteId = cliente.id
                 })
             }
         }
     }
+    return clienteId
 
 }

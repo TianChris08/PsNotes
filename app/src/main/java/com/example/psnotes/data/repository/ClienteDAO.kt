@@ -1,31 +1,33 @@
 package com.example.psnotes.data.repository
 
+//import com.example.psnotes.data.model.ClienteConNotas
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.example.psnotes.data.model.Cliente
-import com.example.psnotes.data.model.ClienteConNotas
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ClienteDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertClient(cliente: Cliente)
+    fun insertClient(cliente: Cliente)
 
     @Query("SELECT * FROM Cliente")
-    fun getTodosClientesFlow() : Flow<List<Cliente>>
+    fun getTodosClientesFlow(): Flow<List<Cliente>>
 
     @Query("SELECT * FROM Cliente")
-    suspend fun getTodosClientes(): List<Cliente>
+    fun getTodosClientes(): List<Cliente>
 
     @Delete
-    suspend fun deleteClient(cliente: Cliente)
+    fun deleteClient(cliente: Cliente)
 
-    @Transaction
+    @Query("SELECT * FROM Cliente WHERE id = :id LIMIT 1")
+    fun getClientePorId(id: String): Cliente
+
+    /*@Transaction
     @Query("SELECT * FROM Cliente WHERE id = :clienteId")
-    fun obtenerClienteConNotas(clienteId: String): ClienteConNotas
+    fun obtenerClienteConNotas(clienteId: String): ClienteConNotas*/
 }
