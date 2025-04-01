@@ -20,7 +20,7 @@ class TrabajadorViewModel(
         private set
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             dao.getTrabajadores().collectLatest {
                 state = state.copy(
                     trabajadores = it
