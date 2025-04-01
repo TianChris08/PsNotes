@@ -1,6 +1,5 @@
 package com.example.psnotes.ui.theme
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,11 +10,10 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.graphics.green
 
 private val DarkColorScheme = darkColorScheme(
     primary = Green40,
-    secondary = Green40,
+    secondary = Green60,
     tertiary = Green20,
 
     // Other default colors to override
@@ -24,22 +22,39 @@ private val DarkColorScheme = darkColorScheme(
     onPrimary = Color.Black,
     onSecondary = Color.Black,
     onTertiary = Color.Black,
-    onBackground = Color(0xFFFFFBFE),
+    onBackground = WhitePs,
     onSurface = Color(0xFFFFFBFE),
+
+    // Contenedor SIN SELECCIONAR
+    primaryContainer = Green40,
+    onPrimaryContainer = Color.White,
+
+    // Contenedor SELECCIONADO
+    secondaryContainer = Green20,
+    onSecondaryContainer = Color.Black
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Green40,
-    secondary = Green40,
-    tertiary = Green40,
+    primary = Purple40,
+    secondary = Purple60,
+    tertiary = Purple20,
 
-    background = WarmIvory,
-    surface = SoftBeige,
+    // Other default colors to override
+    background = Color(0xFFD9D1F3),
+    surface = Color(0xFFD7CFEF),
     onPrimary = Color.White,
-    onSecondary = Color.Black,
+    onSecondary = Color.White,
     onTertiary = Color.White,
-    onBackground = Color.Black,
-    onSurface = DeepGrey
+    onBackground = BlackPs,
+    onSurface = Color(0xFF444343),
+
+    // Contenedor SIN SELECCIONAR
+    primaryContainer = Purple40,
+    onPrimaryContainer = Color.White,
+
+    // Contenedor SELECCIONADO
+    secondaryContainer = Purple20,
+    onSecondaryContainer = Color.Black
 )
 
 @Composable

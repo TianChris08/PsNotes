@@ -62,8 +62,6 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                 Text(text = String.format(Locale.getDefault(), "%.2f €", tarifaPorHora))
             }
 
-            HorizontalDivider(thickness = 3.dp)
-
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -133,30 +131,6 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                     ) {
                         Text(text = "+", style = typography.titleMedium)
                     }
-                }
-
-                HorizontalDivider()
-
-                Text(
-                    modifier = Modifier.padding(vertical = 5.dp),
-                    text = "Precio",
-                    style = typography.titleMedium
-                )
-
-                // Cuadro con el número
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "$precioEstimado €",
-                        style = typography.titleMedium,
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                    )
                 }
             }
         }

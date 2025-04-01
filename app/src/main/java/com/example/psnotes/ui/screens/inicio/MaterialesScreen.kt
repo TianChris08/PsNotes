@@ -234,8 +234,14 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                 Button(
                     onClick = {
                         showDialog = true
-                    }, modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) { Text("Crear Material") }
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text(
+                        text = "Crear Material",
+                        color = colorScheme.onBackground
+                        )
+                }
             }
         }
 

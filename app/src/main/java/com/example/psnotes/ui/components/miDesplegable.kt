@@ -31,14 +31,15 @@ fun miDesplegable(modifier: Modifier, clienteViewModel: ClienteViewModel): Strin
         Button(
             onClick = { expanded = !expanded },
             colors = ButtonColors(
-                containerColor = colorScheme.primary,
-                contentColor = colorScheme.onBackground,
+                containerColor = colorScheme.primaryContainer,
+                contentColor = colorScheme.onPrimaryContainer,
                 disabledContainerColor = Color.DarkGray,
                 disabledContentColor = Color.Gray
             )
         ) {
             Text(
-                text = selectedOption
+                text = selectedOption,
+                color = colorScheme.onPrimaryContainer
             )
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Abrir menú")
         }

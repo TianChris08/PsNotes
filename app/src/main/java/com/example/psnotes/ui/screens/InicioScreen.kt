@@ -1,7 +1,12 @@
 package com.example.psnotes.ui.screens
 
 import android.content.Context
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +14,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -27,6 +35,7 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,8 +46,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -88,6 +102,12 @@ fun InicioScreen(
     val observacionesPrivadas by observacionesViewModel.observacionesPrivadas.collectAsState()
     val trabajoRealizado by trabajoViewModel.trabajoRealizado
 
+    val scaleTrabajos by animateIntAsState(if (selectedSection.value == "trabajo") 75 else 65)
+    val scaleMateriales by animateIntAsState(if (selectedSection.value == "materiales") 75 else 65)
+    val scaleFirma by animateIntAsState(if (selectedSection.value == "firma") 75 else 65)
+    val scaleObservaciones1 by animateIntAsState(if (selectedSection.value == "observaciones1") 75 else 65)
+    val scaleObservaciones2 by animateIntAsState(if (selectedSection.value == "observaciones2") 75 else 65)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -119,7 +139,7 @@ fun InicioScreen(
             PermissionScreen(permissionViewModel)
         }
 
-        // 🔹 Parte Superior - Información fija
+        // 🔹 Parte Superior - Información Cliente
         Row(modifier = Modifier
             .fillMaxSize()
             .weight(0.25f)
@@ -145,6 +165,7 @@ fun InicioScreen(
                         .weight(0.5f),
                     horizontalArrangement = Arrangement.Center
                 ) {
+                    //Obtengo el id del cliente seleccionado
                     clienteId = miDesplegable(
                         modifier = Modifier.padding(top = 5.dp),
                         clienteViewModel = clienteViewModel
@@ -194,19 +215,20 @@ fun InicioScreen(
             )
         }
 
-        HorizontalDivider(color = colorScheme.secondary)
+        val colorFondo = colorScheme.tertiary.copy(alpha = 0.5f)
 
-        // 🔹 Parte Inferior - Contenido Dinámico
+        // 🔹 Parte Media - Contenido Dinámico
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(0.60f),
-        ) {
+                .weight(0.60f)
+                .background(color = colorFondo, shape = RectangleShape)
+            ) {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
-                    .background(colorScheme.background)
+                    .padding(12.dp)
             ) {
                 when (selectedSection.value) {
                     "trabajo" -> TrabajoScreen(trabajoViewModel)
@@ -216,14 +238,12 @@ fun InicioScreen(
                     "observaciones2" -> Observaciones2Screen()
                 }
             }
-
             // 🔹 Botones de Cambio
             Column(
                 modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.End
             ) {
-
                 listOf(
                     Icons.Outlined.WorkOutline to "trabajo",
                     Icons.Outlined.Router to "materiales",
@@ -232,13 +252,29 @@ fun InicioScreen(
                     Icons.Outlined.NoteAlt to "observaciones2"
                 ).forEach { (icon, text) ->
                     FloatingActionButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .border(
+                                width = 2.dp,
+                                color = colorScheme.background,
+                                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 0.dp, bottomEnd = 0.dp, bottomStart = 8.dp)
+                            )
+                            .width(
+                                when (text) {
+                                    "trabajo" -> scaleTrabajos.dp
+                                    "materiales" -> scaleMateriales.dp
+                                    "firma" -> scaleFirma.dp
+                                    "observaciones1" -> scaleObservaciones1.dp
+                                    else -> scaleObservaciones2.dp
+                                }
+                            ),
                         onClick = {
                             selectedSection.value = text
                         },
-                        //shape = shape,
-                        modifier = Modifier.padding(vertical = 4.dp),
-                        contentColor = if (selectedSection.value == text) colorScheme.onPrimary else colorScheme.onBackground,
-                        containerColor = if (selectedSection.value == text) colorScheme.tertiary else colorScheme.primary
+                        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 0.dp, bottomEnd = 0.dp, bottomStart = 8.dp),
+                        contentColor = if (selectedSection.value == text) colorScheme.onSecondaryContainer else colorScheme.onPrimaryContainer,
+                        containerColor = if (selectedSection.value == text) colorScheme.secondaryContainer else colorScheme.primaryContainer
                     ) {
                         Icon(icon, contentDescription = text)
                     }
@@ -298,7 +334,7 @@ fun InicioScreen(
                 ) {
                     Text(
                         text = "Guardar Nota",
-                        color = colorScheme.primary,
+                        color = colorScheme.background,
                         fontWeight = FontWeight.Bold
                     )
                 }
