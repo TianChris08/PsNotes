@@ -37,7 +37,6 @@ fun NuevoClienteForm(onDismiss: () -> Unit, clienteViewModel: ClienteViewModel) 
     val validationErrorMessages = remember { mutableStateOf<Map<String, String?>>(emptyMap()) }
 
 
-
     fun fetchAddressPredictions(query: String) {
         if (query.isNotEmpty()) {
             val request = FindAutocompletePredictionsRequest.builder()

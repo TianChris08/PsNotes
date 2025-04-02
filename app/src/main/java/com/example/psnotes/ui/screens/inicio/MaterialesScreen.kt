@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -44,17 +43,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.psnotes.data.model.Material
 import com.example.psnotes.ui.components.NuevoMaterialDialog
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
-import java.util.UUID
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun MaterialesScreen(materialViewModel: MaterialViewModel) {
     // Observar los materiales del ViewModel
-    val materialesState by remember { derivedStateOf { materialViewModel.state.materiales } }
-    val materialesSeleccionados by remember { derivedStateOf { materialViewModel.state.materialesSeleccionados } }
+    val materialesState by remember { derivedStateOf { materialViewModel.materialesState } }
+    val materialesSeleccionados by remember { derivedStateOf { materialViewModel.materialesSeleccionadosState } }
 
     var searchText by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -81,7 +78,7 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
             Text("Materiales")
         }
         HorizontalDivider()
-        Row {
+        /*Row {
             TextField(
                 value = searchText,
                 onValueChange = { text ->
@@ -152,7 +149,7 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                 },
                 modifier = Modifier.weight(0.15f)
             ) { Text("+") }
-        }
+        }*/
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -230,7 +227,7 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                     }
                 }
             }
-            item {
+            /*item {
                 Button(
                     onClick = {
                         showDialog = true
@@ -242,7 +239,7 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                         color = colorScheme.onBackground
                         )
                 }
-            }
+            }*/
         }
 
 

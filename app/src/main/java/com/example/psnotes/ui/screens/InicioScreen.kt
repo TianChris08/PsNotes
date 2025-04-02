@@ -1,9 +1,7 @@
 package com.example.psnotes.ui.screens
 
 import android.content.Context
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,46 +10,34 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.Router
 import androidx.compose.material.icons.outlined.TextFormat
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.psnotes.data.SessionManager
 import com.example.psnotes.data.model.Nota
-import com.example.psnotes.ui.components.NuevoClienteForm
-import com.example.psnotes.ui.components.PermissionScreen
-import com.example.psnotes.ui.components.miDesplegable
-import com.example.psnotes.ui.components.showToast
+import com.example.psnotes.ui.components.BotonLateral
+import com.example.psnotes.ui.components.EmergenteClientes
+import com.example.psnotes.ui.components.toastAutoCancelable
 import com.example.psnotes.ui.screens.inicio.FirmaScreen
 import com.example.psnotes.ui.screens.inicio.MaterialesScreen
 import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
@@ -61,7 +47,6 @@ import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
-import com.example.psnotes.ui.viewmodel.PermissionViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 import com.google.android.libraries.places.api.Places
@@ -81,26 +66,20 @@ fun InicioScreen(
     context: Context
 ) {
     val trabajoViewModel: TrabajoViewModel = viewModel()
-    val permissionViewModel: PermissionViewModel = viewModel()
 
-    var clienteId by remember { mutableStateOf("") }
+    var clienteId by remember { mutableStateOf<String?>("") }
     var personaContacto by remember { mutableStateOf("") }
 
     val precioMateriales = viewModelMaterial.sumarPrecioMateriales()
     val precioManoDeObra by trabajoViewModel.precioManoDeObra.collectAsState()
 
     val selectedSection = remember { mutableStateOf("trabajo") }
-    val mostrarFormularioNuevoCliente = remember { mutableStateOf(false) }
 
     val observacionesPublicas by observacionesViewModel.observacionesPublicas.collectAsState()
     val observacionesPrivadas by observacionesViewModel.observacionesPrivadas.collectAsState()
     val trabajoRealizado by trabajoViewModel.trabajoRealizado
 
-    val scaleTrabajos by animateIntAsState(if (selectedSection.value == "trabajo") 75 else 65)
-    val scaleMateriales by animateIntAsState(if (selectedSection.value == "materiales") 75 else 65)
-    val scaleFirma by animateIntAsState(if (selectedSection.value == "firma") 75 else 65)
-    val scaleObservaciones1 by animateIntAsState(if (selectedSection.value == "observaciones1") 75 else 65)
-    val scaleObservaciones2 by animateIntAsState(if (selectedSection.value == "observaciones2") 75 else 65)
+
 
     Column(
         modifier = Modifier
@@ -112,32 +91,12 @@ fun InicioScreen(
             Places.initialize(context, "AIzaSyAmqr5VECPpGR-vlAo3mGqn60Dg24I9pV8")
         }
 
-        // Verificar los permisos al inicio
-        LaunchedEffect(Unit) {
-            permissionViewModel.checkLocationPermission(context)
-            permissionViewModel.checkStoragePermission(context)
-            permissionViewModel.checkInternetPermission()
-        }
-
-        // Observar los cambios de los permisos utilizando LiveData y observeAsState
-        val locationPermissionGranted by permissionViewModel.locationPermissionGranted.observeAsState(
-            false
-        )
-        val storagePermissionGranted by permissionViewModel.storagePermissionGranted.observeAsState(
-            false
-        )
-
-        // Condicional para mostrar la UI según los permisos
-        if (!locationPermissionGranted || !storagePermissionGranted) {
-            // Mostrar pantalla de permisos
-            PermissionScreen(permissionViewModel)
-        }
-
         // 🔹 Parte Superior - Información Cliente
-        Row(modifier = Modifier
-            .fillMaxSize()
-            .weight(0.25f)
-            .background(colorScheme.surface)
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(0.25f)
+                .background(colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -159,13 +118,18 @@ fun InicioScreen(
                         .weight(0.5f),
                     horizontalArrangement = Arrangement.Center
                 ) {
+                    Button(
+                        onClick = { clienteViewModel.mostrarEmergenteClientes.value = true }
+                    ) { Text(clienteViewModel.clienteSeleccionado.value?.commercialName ?: "Selecciona un cliente") }
+
+
                     //Obtengo el id del cliente seleccionado
-                    clienteId = miDesplegable(
+                    /*clienteId = miDesplegable(
                         modifier = Modifier.padding(top = 5.dp),
                         clienteViewModel = clienteViewModel
-                    )
+                    )*/
 
-                    IconButton(
+                    /*IconButton(
                         onClick = {
                             mostrarFormularioNuevoCliente.value = true
                         },
@@ -184,12 +148,13 @@ fun InicioScreen(
                             contentDescription = "Agregar cliente",
                             tint = colorScheme.onPrimaryContainer
                         )
-                    }
+                    }*/
                 }
-                Row(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 8.dp)
-                    .weight(0.5f),
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 8.dp)
+                        .weight(0.5f),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     TextField(
@@ -202,12 +167,16 @@ fun InicioScreen(
             }
         }
 
-        if (mostrarFormularioNuevoCliente.value) {
-            NuevoClienteForm(
-                onDismiss = { mostrarFormularioNuevoCliente.value = false },
+        if (clienteViewModel.mostrarEmergenteClientes.value) {
+            clienteId = EmergenteClientes(
+                onDismiss = {
+                    clienteViewModel.mostrarEmergenteClientes.value = false
+                },
                 clienteViewModel = clienteViewModel
             )
         }
+
+
 
         val colorFondo = colorScheme.tertiary.copy(alpha = 0.5f)
 
@@ -217,11 +186,11 @@ fun InicioScreen(
                 .fillMaxSize()
                 .weight(0.60f)
                 .background(color = colorFondo, shape = RectangleShape)
-            ) {
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f)
+                    .weight(0.8f)
                     .padding(12.dp)
             ) {
                 when (selectedSection.value) {
@@ -234,7 +203,9 @@ fun InicioScreen(
             }
             // 🔹 Botones de Cambio
             Column(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.2f),
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.End
             ) {
@@ -245,48 +216,25 @@ fun InicioScreen(
                     Icons.Outlined.NoteAlt to "observaciones1",
                     Icons.Outlined.NoteAlt to "observaciones2"
                 ).forEach { (icon, text) ->
-                    FloatingActionButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .border(
-                                width = 2.dp,
-                                color = colorScheme.background,
-                                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 0.dp, bottomEnd = 0.dp, bottomStart = 8.dp)
-                            )
-                            .width(
-                                when (text) {
-                                    "trabajo" -> scaleTrabajos.dp
-                                    "materiales" -> scaleMateriales.dp
-                                    "firma" -> scaleFirma.dp
-                                    "observaciones1" -> scaleObservaciones1.dp
-                                    else -> scaleObservaciones2.dp
-                                }
-                            ),
-                        onClick = {
-                            selectedSection.value = text
-                        },
-                        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 0.dp, bottomEnd = 0.dp, bottomStart = 8.dp),
-                        contentColor = if (selectedSection.value == text) colorScheme.onSecondaryContainer else colorScheme.onPrimaryContainer,
-                        containerColor = if (selectedSection.value == text) colorScheme.secondaryContainer else colorScheme.primaryContainer
-                    ) {
-                        Icon(icon, contentDescription = text)
-                    }
+                    BotonLateral(Modifier.weight(1f), selectedSection, icon, text)
                 }
             }
         }
 
         HorizontalDivider(color = colorScheme.secondary)
 
+        // 🔹 Parte Baja - Información final y botón crear nota
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.15f)
                 .background(colorScheme.surface)
         ) {
-            Column(modifier = Modifier.fillMaxSize(),
+            Column(
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Center
+            ) {
                 Row(horizontalArrangement = Arrangement.Center) {
                     /*Text(
                         "Mano de obra: %.2f €   \nMateriales: %.2f €   \nTotal: %.2f €".format(
@@ -296,8 +244,9 @@ fun InicioScreen(
                         ),
                         color = colorScheme.onBackground
                     )*/
-                    Text("Total: ${precioManoDeObra + precioMateriales}",
-                    color = colorScheme.onBackground
+                    Text(
+                        "Total: ${precioManoDeObra + precioMateriales}",
+                        color = colorScheme.onBackground
                     )
                 }
                 Button(
@@ -311,7 +260,7 @@ fun InicioScreen(
                         val nota = Nota(
                             id = UUID.randomUUID().toString(),
                             personaContacto = personaContacto,
-                            clienteId = clienteId,
+                            clienteId = clienteId.toString(),
                             trabajadorId = SessionManager.getWorkerId(context),
                             trabajoRealizado = trabajoRealizado,
                             notaCerradaEn = LocalDateTime.now().toString(),
@@ -321,12 +270,23 @@ fun InicioScreen(
                             firma = "firmado"
                         )
                         if (nota.clienteId.trim().isBlank()) {
-                            showToast(context, "Cliente no seleccionado, no se ha creado la nota")
-                        } else if (notaViewModel.comprobarNota(notaViewModel.state.notas, nota) == 1) {
-                            showToast(context, "Has insertado la misma nota 2 veces(trabajo y fecha identicos)")
-                        } else if (notaViewModel.comprobarNota(notaViewModel.state.notas, nota) == 0) {
+                            toastAutoCancelable(context, "Cliente no seleccionado, no se ha creado la nota")
+                        } else if (notaViewModel.comprobarNota(
+                                notaViewModel.notasState,
+                                nota
+                            ) == 1
+                        ) {
+                            toastAutoCancelable(
+                                context,
+                                "Has insertado la misma nota 2 veces(trabajo y fecha identicos)"
+                            )
+                        } else if (notaViewModel.comprobarNota(
+                                notaViewModel.notasState,
+                                nota
+                            ) == 0
+                        ) {
                             notaViewModel.createNota(nota)
-                            showToast(context, "Nota insertada con éxito")
+                            toastAutoCancelable(context, "Nota insertada con éxito")
                         }
                     },
                 ) {

@@ -1,16 +1,20 @@
 package com.example.psnotes.ui.viewmodel
 
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Cliente
 import com.example.psnotes.data.repository.ClienteDAO
-import com.example.psnotes.data.state.ClienteState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,7 +27,7 @@ class ClienteViewModel(
 
     val erroresValidacion = mutableMapOf<String, String?>()
 
-    var state by mutableStateOf(ClienteState())
+    var clientesState by mutableStateOf(emptyList<Cliente>())
         private set
 
     var errorGeneral by mutableStateOf<String?>(null)
@@ -32,19 +36,25 @@ class ClienteViewModel(
     private val _nombreCliente = mutableStateOf<String?>(null)
     val nombreCliente: String? get() = _nombreCliente.value
 
+    private val _clienteSeleccionado by mutableStateOf<Cliente?>(null)
+    val clienteSeleccionado: MutableState<Cliente?> = mutableStateOf(_clienteSeleccionado)
+    val mostrarEmergenteClientes = mutableStateOf(false)
+
+
+
     init {
         viewModelScope.launch {
             try {
                 dao.getTodosClientesFlow().collectLatest { nuevosClientes ->
                     // Verifica el contenido antes de sobrescribir
-                    Log.d("NotaViewModel", "Clientes anteriores: ${state.clientes}")
+                    Log.d("NotaViewModel", "Clientes anteriores: $clientesState")
                     Log.d("NotaViewModel", "Nuevos clientes: $nuevosClientes")
 
                     // Aquí se sobrescribe la lista de clientes
-                    state = state.copy(clientes = nuevosClientes)
+                    clientesState = nuevosClientes
 
                     // Verifica el contenido después de sobrescribir
-                    Log.d("NotaViewModel", "Clientes después de actualizar: ${state.clientes}")
+                    Log.d("NotaViewModel", "Clientes después de actualizar: $clientesState")
                 }
             } catch (e: Exception) {
                 errorGeneral = "Error al cargar clientes: ${e.message}"
@@ -52,22 +62,22 @@ class ClienteViewModel(
         }
     }
 
+    fun getClientes() : List<Cliente> {
+        return clientesState
+    }
+
     fun buscarClientePorId(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val cliente = dao.getClientePorId(id) // Asegúrate de que devuelve un objeto Cliente
-            withContext(Dispatchers.Main) {
-                _nombreCliente.value = cliente.commercialName ?: "Cliente no encontrado"
+            if (id != "nulo") {
+                val cliente = dao.getClientePorId(id) // Asegúrate de que devuelve un objeto Cliente
+                withContext(Dispatchers.Main) {
+                    _nombreCliente.value = cliente.commercialName
+                }
+            } else {
+                errorGeneral = "No se ha encontrado el id del Cliente"
             }
+
         }
-    }
-
-    fun changeFiscalName(fiscalName:String) {
-        state = state.copy(nombreFiscalCliente = fiscalName)
-
-    }
-
-    fun changeCommercialName(commercialName:String) {
-        state = state.copy(nombreComercialCliente = commercialName)
     }
 
     fun deleteCliente(cliente: Cliente) {
@@ -80,25 +90,6 @@ class ClienteViewModel(
         }
     }
 
-    fun createClientWithoutStore() {
-        createClientWithoutStore(
-            state.nombreFiscalCliente,
-            state.nombreComercialCliente,
-            state.telefonoCliente,
-            state.correoCliente,
-        )
-    }
-
-    fun createClient() {
-        createClient(
-            state.nombreFiscalCliente,
-            state.nombreComercialCliente,
-            state.telefonoCliente,
-            state.correoCliente,
-            state.coordenadasNegocio
-        )
-    }
-
     fun createClient(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String, coordenadasNegocio: String?): MutableMap<String, String?>? {
         if (!validarDatos(nombreFiscal, nombreComercial, telefono, correo)) return erroresValidacion
 
@@ -109,28 +100,6 @@ class ClienteViewModel(
             telefono,
             correo,
             coordenadasNegocio
-        )
-
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                dao.insertClient(cliente)
-            } catch (e: Exception) {
-                errorGeneral = "Error al crear cliente: ${e.message}"
-            }
-        }
-
-        return null
-    }
-
-    fun createClientWithoutStore(nombreFiscal: String, nombreComercial: String, telefono: String, correo: String): MutableMap<String, String?>? {
-        if (!validarDatos(nombreFiscal, nombreComercial, telefono, correo)) return erroresValidacion
-
-        val cliente = Cliente(
-            UUID.randomUUID().toString(),
-            nombreFiscal,
-            nombreComercial,
-            telefono,
-            correo
         )
 
         viewModelScope.launch(Dispatchers.IO) {

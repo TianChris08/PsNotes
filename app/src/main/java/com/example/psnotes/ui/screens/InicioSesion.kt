@@ -29,7 +29,7 @@ fun InicioSesion(
     context: Context,
     paddingValues: PaddingValues,
     navController: NavController,
-    viewModel: TrabajadorViewModel = viewModel(),
+    trabajadorViewModel: TrabajadorViewModel = viewModel(),
 ) {
 
     var nombre by remember { mutableStateOf("") }
@@ -41,11 +41,11 @@ fun InicioSesion(
     // Verificar si hay datos guardados en SharedPreferences
     val (savedUsername, savedPin) = SessionManager.getSavedLoginDetails(context)
 
-    if (viewModel.recordarUsuario && savedUsername != null && savedPin != -1) {
+    if (trabajadorViewModel.recordarUsuario && savedUsername != null && savedPin != -1) {
         nombre = savedUsername
         pin = savedPin.toString()
         // Iniciar sesión automáticamente si los datos son correctos
-        if (viewModel.state.trabajadores.any { it.nombre == nombre && it.pin == savedPin }) {
+        if (trabajadorViewModel.trabajadoresState.any { it.nombre == nombre && it.pin == savedPin }) {
             SessionManager.setLoggedIn(context, true)
             navController.popBackStack()
             navController.navigate("Inicio")
@@ -73,8 +73,8 @@ fun InicioSesion(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
-                checked = viewModel.recordarUsuario,
-                onCheckedChange = { viewModel.recordarUsuario = it })
+                checked = trabajadorViewModel.recordarUsuario,
+                onCheckedChange = { trabajadorViewModel.recordarUsuario = it })
             Text("Iniciar sesión automáticamente")
         }
 
@@ -82,12 +82,12 @@ fun InicioSesion(
             modifier = Modifier.padding(10.dp),
             onClick = {
                 val pinInt = pin.toIntOrNull()
-                val trabajador = viewModel.state.trabajadores.find { it.nombre == nombre && it.pin == pinInt }
+                val trabajador = trabajadorViewModel.trabajadoresState.find { it.nombre == nombre && it.pin == pinInt }
                 val workerId = trabajador?.id ?: -1
 
                 if (nombre != "" && trabajador != null) {
                     SessionManager.setLoggedIn(context, true)
-                    if (viewModel.recordarUsuario) {
+                    if (trabajadorViewModel.recordarUsuario) {
                         SessionManager.saveLoginDetails(context, nombre, pinInt ?: -1, workerId.toString())
                     }
                     navController.popBackStack()

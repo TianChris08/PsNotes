@@ -19,15 +19,6 @@ class ClienteViewModelTest {
     }
 
     @Test
-    fun `test changeFiscalName updates state correctly`() {
-        val newFiscalName = "Nuevo Nombre Fiscal"
-
-        viewModel.changeFiscalName(newFiscalName)
-
-        assertEquals(newFiscalName, viewModel.state.nombreFiscalCliente)  // Verifica que el nombre fiscal se actualizó correctamente
-    }
-
-    @Test
     fun `test createClient calls insertClient on valid data`() {
         // Datos válidos
         val nombreFiscal = "Nombre Fiscal"

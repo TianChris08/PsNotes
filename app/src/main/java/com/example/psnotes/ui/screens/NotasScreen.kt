@@ -34,11 +34,11 @@ fun NotasScreen(
             .fillMaxSize()
     ) {
 
-        val notasSize = notasViewModel.state.notas.size
+        val notasSize = notasViewModel.notasState.size
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(notasSize) { nota ->
-                val clienteId = notasViewModel.state.notas[nota].clienteId.toString()
+                val clienteId = clienteViewModel.clienteSeleccionado.value?.id ?: "nulo"
                 val nombreCliente = remember { mutableStateOf("Cargando...") }
 
                 LaunchedEffect(clienteId) {
@@ -53,18 +53,18 @@ fun NotasScreen(
                     .fillMaxWidth()) {
                     Column(modifier = Modifier.padding(8.dp)) {
                         Text(
-                            text = "ID Nota: ${notasViewModel.state.notas[nota].id}",
+                            text = "ID Nota: ${notasViewModel.notasState[nota].id}",
                             fontWeight = FontWeight.Thin
                             )
                         HorizontalDivider()
 
-                        Text(text = "Empresa: ${nombreCliente.value}")
-                        Text(text = "Trabajador: ${notasViewModel.state.notas[nota].trabajadorId}")
-                        Text(text = "Persona de contacto: ${notasViewModel.state.notas[nota].personaContacto}")
-                        Text(text = "Fecha: ${notasViewModel.state.notas[nota].fecha ?: "Fecha no disponible"}")
-                        Text(text = "Trabajo realizado: ${notasViewModel.state.notas[nota].trabajoRealizado}")
-                        Text(text = "Observaciones públicas: ${notasViewModel.state.notas[nota].observacionesPublias ?: "Sin observaciones"}")
-                        Text(text = "Observaciones privadas: ${notasViewModel.state.notas[nota].observacionesPrivadas ?: "Sin observaciones"}")
+                        Text(text = "Cliente: ${nombreCliente.value}")
+                        Text(text = "Trabajador: ${notasViewModel.notasState[nota].trabajadorId}")
+                        Text(text = "Persona de contacto: ${notasViewModel.notasState[nota].personaContacto}")
+                        Text(text = "Fecha: ${notasViewModel.notasState[nota].fecha ?: "Fecha no disponible"}")
+                        Text(text = "Trabajo realizado: ${notasViewModel.notasState[nota].trabajoRealizado}")
+                        Text(text = "Observaciones públicas: ${notasViewModel.notasState[nota].observacionesPublias ?: "Sin observaciones"}")
+                        Text(text = "Observaciones privadas: ${notasViewModel.notasState[nota].observacionesPrivadas ?: "Sin observaciones"}")
                     }
                 }
             }

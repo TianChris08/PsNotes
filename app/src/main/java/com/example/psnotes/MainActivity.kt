@@ -1,6 +1,7 @@
 package com.example.psnotes
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,18 +27,28 @@ import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
+import com.example.psnotes.ui.viewmodel.PermissionViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 
 class MainActivity : ComponentActivity() {
+    lateinit var permissionViewModel: PermissionViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val app = application as PsNotes
+        val db = app.database
+
         enableEdgeToEdge()
         setContent {
             PsNotesTheme {
                 val context = LocalContext.current
                 val navController = rememberNavController()
 
-                val db = AppDatabaseSingleton.getDatabase(context)
+                permissionViewModel = PermissionViewModel()
+
+                // Llamas a los métodos del ViewModel y pasas la referencia a la actividad
+                permissionViewModel.checkLocationPermission(this)
+                permissionViewModel.checkStoragePermission(this)
 
                 // Obtener los DAOs de la base de datos
                 val clienteDao = db.clienteDao

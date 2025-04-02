@@ -7,20 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Nota
 import com.example.psnotes.data.repository.NotaDAO
-import com.example.psnotes.data.state.NotaState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 
 class NotaViewModel(
     private val notaDao: NotaDAO
 ) : ViewModel() {
 
-    val erroresValidacion = mutableMapOf<String, String?>()
-
-    var state by mutableStateOf(NotaState())
+    var notasState by mutableStateOf(emptyList<Nota>())
         private set
 
     var errorGeneral by mutableStateOf<String?>(null)
@@ -30,79 +26,12 @@ class NotaViewModel(
         viewModelScope.launch {
             try {
                 notaDao.getNotasFlow().collectLatest { nota ->
-                    state = state.copy(notas = nota)
+                    notasState = nota
                 }
             } catch (e: Exception) {
                 errorGeneral = "Error al cargar notas: ${e.message}"
             }
         }
-    }
-
-
-    fun changePersonaContacto(nuevaPersonaContacto: String) {
-        state = state.copy(personaContacto = nuevaPersonaContacto)
-
-    }
-
-    fun changeFechaCierreNota(nuevaFechaCierre: String) {
-        state = state.copy(notaCerradaEn = nuevaFechaCierre)
-    }
-
-    fun changeFechaAbrirNota(nuevaFechaAbertura: String) {
-        state = state.copy(fecha = nuevaFechaAbertura)
-    }
-
-    fun changeObservacionesPublicas(nuevasObservacionesPublicas: String) {
-        state = state.copy(observacionesPublicas = nuevasObservacionesPublicas)
-    }
-
-    fun changeObservacionesPrivadas(nuevasObservacionesPrivadas: String) {
-        state = state.copy(observacionesPrivadas = nuevasObservacionesPrivadas)
-    }
-
-
-    fun deleteNota(nota: Nota) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                notaDao.deleteNota(nota)
-            } catch (e: Exception) {
-                errorGeneral = "Error al eliminar nota: ${e.message}"
-            }
-        }
-    }
-
-    fun createNota(
-        personaContacto: String,
-        clienteId: String,
-        trabajadorId: String,
-        trabajoRealizado: String?,
-        notaCerradaEn: String?,
-        fecha: String,
-        observacionesPublias: String?,
-        observacionesPrivadas: String?,
-        firmaUri: String?
-    ): MutableMap<String, String?>? {
-        val nota = Nota(
-            UUID.randomUUID().toString(),
-            personaContacto,
-            clienteId,
-            trabajadorId.toString(),
-            trabajoRealizado.toString(),
-            notaCerradaEn,
-            fecha.toString(),
-            observacionesPublias,
-            observacionesPrivadas,
-            firmaUri
-        )
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                notaDao.insertNota(nota)
-            } catch (e: Exception) {
-                errorGeneral = "Error al crear nota: ${e.message}"
-            }
-        }
-
-        return null
     }
 
     fun createNota(
@@ -117,21 +46,6 @@ class NotaViewModel(
             }
         }
 
-    }
-
-
-    fun createNota() {
-        createNota(
-            state.personaContacto,
-            state.clienteId.toString(),
-            state.trabajadorId.toString(),
-            state.trabajoRealizado.toString(),
-            state.notaCerradaEn,
-            state.fecha.toString(),
-            state.observacionesPublicas,
-            state.observacionesPrivadas,
-            state.firmaUri
-        )
     }
 
     fun comprobarNota(notas: List<Nota>, notaNueva: Nota): Int {

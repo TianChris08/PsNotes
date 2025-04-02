@@ -111,7 +111,7 @@ private suspend fun initializeData(appDatabase: AppDatabase) {
             commercialName = "Pensisoft",
             telefono = "345345345",
             correo = "marcpensi@gmail.com",
-            coordenadasNegocio = "39.9946, -0.0690"
+            coordenadasNegocio = "39.98096459203265, -0.028817101095514178"
         )
         appDatabase.clienteDao.insertClient(cliente)
 

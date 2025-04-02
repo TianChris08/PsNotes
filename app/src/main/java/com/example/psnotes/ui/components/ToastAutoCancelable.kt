@@ -5,7 +5,7 @@ import android.widget.Toast
 
 var lastToast: Toast? = null
 
-fun showToast(context: Context, message: String) {
+fun toastAutoCancelable(context: Context, message: String) {
     lastToast?.cancel()
     lastToast = Toast.makeText(context, message, Toast.LENGTH_SHORT).also { it.show() }
 }
