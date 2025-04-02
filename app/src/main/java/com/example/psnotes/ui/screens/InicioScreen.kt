@@ -1,10 +1,7 @@
 package com.example.psnotes.ui.screens
 
 import android.content.Context
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +11,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -35,7 +30,6 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,20 +40,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.psnotes.data.SessionManager
 import com.example.psnotes.data.model.Nota
-import com.example.psnotes.ui.components.miDesplegable
 import com.example.psnotes.ui.components.NuevoClienteForm
 import com.example.psnotes.ui.components.PermissionScreen
+import com.example.psnotes.ui.components.miDesplegable
+import com.example.psnotes.ui.components.showToast
 import com.example.psnotes.ui.screens.inicio.FirmaScreen
 import com.example.psnotes.ui.screens.inicio.MaterialesScreen
 import com.example.psnotes.ui.screens.inicio.Observaciones1Screen
@@ -70,6 +62,7 @@ import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
 import com.example.psnotes.ui.viewmodel.PermissionViewModel
+import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 import com.google.android.libraries.places.api.Places
 import java.time.LocalDate
@@ -84,6 +77,7 @@ fun InicioScreen(
     clienteViewModel: ClienteViewModel = viewModel(),
     notaViewModel: NotaViewModel = viewModel(),
     observacionesViewModel: ObservacionesViewModel = viewModel(),
+    trabajadorViewModel: TrabajadorViewModel = viewModel(),
     context: Context
 ) {
     val trabajoViewModel: TrabajoViewModel = viewModel()
@@ -318,7 +312,7 @@ fun InicioScreen(
                             id = UUID.randomUUID().toString(),
                             personaContacto = personaContacto,
                             clienteId = clienteId,
-                            trabajadorId = UUID.randomUUID().toString(),
+                            trabajadorId = SessionManager.getWorkerId(context),
                             trabajoRealizado = trabajoRealizado,
                             notaCerradaEn = LocalDateTime.now().toString(),
                             fecha = LocalDate.now().toString(),
@@ -326,10 +320,14 @@ fun InicioScreen(
                             observacionesPrivadas = observacionesPrivadas,
                             firma = "firmado"
                         )
-                        /*notaViewModel.state.clienteId = clienteId
-                        notaViewModel.state.nombreCliente = clienteViewModel.buscarClientePorId(clienteId)
-                        notaViewModel.state.personaContacto = personaContacto*/
-                        notaViewModel.createNota(nota)
+                        if (nota.clienteId.trim().isBlank()) {
+                            showToast(context, "Cliente no seleccionado, no se ha creado la nota")
+                        } else if (notaViewModel.comprobarNota(notaViewModel.state.notas, nota) == 1) {
+                            showToast(context, "Has insertado la misma nota 2 veces(trabajo y fecha identicos)")
+                        } else if (notaViewModel.comprobarNota(notaViewModel.state.notas, nota) == 0) {
+                            notaViewModel.createNota(nota)
+                            showToast(context, "Nota insertada con éxito")
+                        }
                     },
                 ) {
                     Text(

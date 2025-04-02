@@ -15,7 +15,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.psnotes.data.AppDatabaseSingleton
 import com.example.psnotes.ui.components.BottomBar
-import com.example.psnotes.ui.components.DrawController
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
 import com.example.psnotes.ui.screens.MapScreen
@@ -28,7 +27,6 @@ import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
-import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +108,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente, viewModelNota, viewModelObservaciones, context)
+                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente, viewModelNota, viewModelObservaciones, viewModelTrabajador, context)
                         }
                         composable("Buscar") {
                             MapScreen(paddingValues, clienteDao)

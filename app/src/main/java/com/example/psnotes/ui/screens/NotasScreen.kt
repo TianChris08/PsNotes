@@ -59,6 +59,7 @@ fun NotasScreen(
                         HorizontalDivider()
 
                         Text(text = "Empresa: ${nombreCliente.value}")
+                        Text(text = "Trabajador: ${notasViewModel.state.notas[nota].trabajadorId}")
                         Text(text = "Persona de contacto: ${notasViewModel.state.notas[nota].personaContacto}")
                         Text(text = "Fecha: ${notasViewModel.state.notas[nota].fecha ?: "Fecha no disponible"}")
                         Text(text = "Trabajo realizado: ${notasViewModel.state.notas[nota].trabajoRealizado}")

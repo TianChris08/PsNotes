@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class Nota(
     @PrimaryKey(autoGenerate = false)
     val id: String, //aosiuhd9283h49uhdf
-    val clienteId: String?, // Bar la sardina
+    val clienteId: String, // Bar la sardina
     val personaContacto: String, // Pepe el cortados
     val trabajadorId: String?, // Pol
 

@@ -9,9 +9,6 @@ import com.example.psnotes.data.model.Nota
 import com.example.psnotes.data.repository.NotaDAO
 import com.example.psnotes.data.state.NotaState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -135,5 +132,17 @@ class NotaViewModel(
             state.observacionesPrivadas,
             state.firmaUri
         )
+    }
+
+    fun comprobarNota(notas: List<Nota>, notaNueva: Nota): Int {
+        var resultado = 0
+        for (nota in notas) {
+            if (notaNueva.trabajoRealizado == nota.trabajoRealizado && notaNueva.fecha == nota.fecha) {
+                resultado = 1
+            } else {
+                resultado = 0
+            }
+        }
+        return resultado
     }
 }

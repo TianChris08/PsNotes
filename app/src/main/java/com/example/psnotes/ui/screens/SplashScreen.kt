@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -23,7 +22,6 @@ import com.example.psnotes.data.AppDatabase
 import com.example.psnotes.data.AppDatabaseSingleton
 import com.example.psnotes.data.SessionManager
 import com.example.psnotes.data.model.Cliente
-import com.example.psnotes.data.model.Nota
 import com.example.psnotes.data.model.Trabajador
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -71,6 +69,7 @@ fun SplashScreen(
     }
 
     LaunchedEffect(Unit) {
+        context.deleteDatabase("ps_notes_database")
         val appDatabase = AppDatabaseSingleton.getDatabase(context)
         initializeData(appDatabase)
 
@@ -93,10 +92,18 @@ fun SplashScreen(
 private suspend fun initializeData(appDatabase: AppDatabase) {
     withContext(Dispatchers.IO) {
         // Insertar datos de ejemplo para cada tabla
-        val trabajador = Trabajador(
-            id = UUID.randomUUID().toString(), nombre = "Chris", tarifa = 25.0, pin = 1234
+        val trabajadorChris = Trabajador(
+            id = UUID.randomUUID().toString(), nombre = "Chris", tarifa = 15.0, pin = 1234
         )
-        appDatabase.trabajadorDAO.insertTrabajador(trabajador)
+        appDatabase.trabajadorDAO.insertTrabajador(trabajadorChris)
+        val trabajadorPol = Trabajador(
+            id = UUID.randomUUID().toString(), nombre = "Pol", tarifa = 25.0, pin = 1234
+        )
+        appDatabase.trabajadorDAO.insertTrabajador(trabajadorPol)
+        val trabajadorMarc = Trabajador(
+            id = UUID.randomUUID().toString(), nombre = "Marc", tarifa = 25.0, pin = 1234
+        )
+        appDatabase.trabajadorDAO.insertTrabajador(trabajadorMarc)
 
         val cliente = Cliente(
             id = UUID.randomUUID().toString(),
