@@ -17,51 +17,39 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BotonLateral(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     selectedSection: MutableState<String>,
     icon: ImageVector,
     text: String
 ) {
 
-    val scaleTrabajos by animateIntAsState(if (selectedSection.value == "trabajo") 75 else 65)
-    val scaleMateriales by animateIntAsState(if (selectedSection.value == "materiales") 75 else 65)
-    val scaleFirma by animateIntAsState(if (selectedSection.value == "firma") 75 else 65)
-    val scaleObservaciones1 by animateIntAsState(if (selectedSection.value == "observaciones1") 75 else 65)
-    val scaleObservaciones2 by animateIntAsState(if (selectedSection.value == "observaciones2") 75 else 65)
+    val isSelected = selectedSection.value == text
+
+    val scale by animateIntAsState(if (isSelected) 70 else 65)
 
     FloatingActionButton(
         modifier = modifier
             .fillMaxHeight()
-            .border(
-                width = 2.dp,
-                color = colorScheme.background,
-                shape = RoundedCornerShape(
-                    topStart = 8.dp,
-                    topEnd = 0.dp,
-                    bottomEnd = 0.dp,
-                    bottomStart = 8.dp
-                )
+            .then(
+                if (!isSelected) {
+                    Modifier.border(
+                        width = 2.dp,
+                        color = colorScheme.background,
+                    )
+                } else Modifier // Sin borde derecho cuando está seleccionado
             )
-            .width(
-                when (text) {
-                    "trabajo" -> scaleTrabajos.dp
-                    "materiales" -> scaleMateriales.dp
-                    "firma" -> scaleFirma.dp
-                    "observaciones1" -> scaleObservaciones1.dp
-                    else -> scaleObservaciones2.dp
-                }
-            ),
+            .width(scale.dp),
         onClick = {
             selectedSection.value = text
         },
         shape = RoundedCornerShape(
-            topStart = 8.dp,
-            topEnd = 0.dp,
-            bottomEnd = 0.dp,
-            bottomStart = 8.dp
+            topStart = 0.dp,
+            topEnd = if (isSelected) 0.dp else 8.dp, // Sin borde derecho cuando está seleccionado
+            bottomEnd = if (isSelected) 0.dp else 8.dp,
+            bottomStart = 0.dp
         ),
-        contentColor = if (selectedSection.value == text) colorScheme.onSecondaryContainer else colorScheme.onPrimaryContainer,
-        containerColor = if (selectedSection.value == text) colorScheme.secondaryContainer else colorScheme.primaryContainer
+        contentColor = if (isSelected) colorScheme.onSecondaryContainer else colorScheme.onPrimaryContainer,
+        containerColor = if (isSelected) colorScheme.secondaryContainer else colorScheme.primaryContainer
     ) {
         Icon(icon, contentDescription = text)
     }

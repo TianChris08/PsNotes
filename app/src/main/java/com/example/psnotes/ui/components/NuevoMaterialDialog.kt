@@ -23,11 +23,13 @@ fun NuevoMaterialDialog(
     onAdd: (Material) -> Unit,
 ) {
     var materialName by remember { mutableStateOf("") }
-    var tipoMaterial by remember { mutableStateOf("") }
-    var estadoMaterial by remember { mutableStateOf("") }
+    val tipoMaterial by remember { mutableStateOf("") }
+    val estadoMaterial by remember { mutableStateOf("") }
     var precioUnitarioMaterial by remember { mutableStateOf("") }
     var especificacionesMaterial by remember { mutableStateOf("") }
-    var fechaExpiracionMaterial by remember { mutableStateOf("") }
+    val fechaExpiracionMaterial by remember { mutableStateOf("") }
+    var mensajeValidacion by remember { mutableStateOf("") }
+    var mostrarMensajeValidacion by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -39,6 +41,7 @@ fun NuevoMaterialDialog(
                         value = materialName,
                         onValueChange = { materialName = it },
                         label = { Text("Nombre del Material") },
+                        singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -69,6 +72,7 @@ fun NuevoMaterialDialog(
                         },
                         label = { Text("Precio Unitario") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -77,8 +81,12 @@ fun NuevoMaterialDialog(
                         value = especificacionesMaterial,
                         onValueChange = { especificacionesMaterial = it },
                         label = { Text("Especificaciones") },
+                        singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
+                }
+                item {
+                    Text(mensajeValidacion)
                 }
             }
         },
@@ -86,17 +94,30 @@ fun NuevoMaterialDialog(
             Button(
                 onClick = {
                     // Crear material
-                    val material = Material(
-                        UUID.randomUUID().toString(),
-                        materialName,
-                        tipoMaterial,
-                        estadoMaterial,
-                        precioUnitarioMaterial.toDouble(),
-                        especificacionesMaterial,
-                        fechaExpiracionMaterial,
-                        estadoMaterial
-                    )
-                    onAdd(material)
+                    if (materialName.isNotBlank() && precioUnitarioMaterial.isNotBlank()) {
+                        mostrarMensajeValidacion = false
+                        val material = Material(
+                            UUID.randomUUID().toString(),
+                            materialName,
+                            tipoMaterial,
+                            estadoMaterial,
+                            precioUnitarioMaterial.toDouble(),
+                            especificacionesMaterial,
+                            fechaExpiracionMaterial,
+                            estadoMaterial
+                        )
+                        onAdd(material)
+                    }
+                    else if(materialName.isBlank() && precioUnitarioMaterial.isBlank()) {
+                        mensajeValidacion = "Nombre y precio del material vacíos"
+                        mostrarMensajeValidacion = true
+                    } else if(materialName.isBlank()) {
+                        mensajeValidacion = "Nombre del material vacío"
+                        mostrarMensajeValidacion = true
+                    } else if (precioUnitarioMaterial.isBlank()) {
+                        mensajeValidacion = "Precio del material vacío"
+                        mostrarMensajeValidacion = true
+                    }
                 }
             ) {
                 Text("Añadir")
@@ -105,6 +126,7 @@ fun NuevoMaterialDialog(
         dismissButton = {
             Button(onClick = onDismiss) {
                 Text("Cancelar")
+                mostrarMensajeValidacion = false
             }
         }
     )

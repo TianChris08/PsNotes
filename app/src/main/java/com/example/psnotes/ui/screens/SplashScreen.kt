@@ -22,6 +22,7 @@ import com.example.psnotes.data.AppDatabase
 import com.example.psnotes.data.AppDatabaseSingleton
 import com.example.psnotes.data.SessionManager
 import com.example.psnotes.data.model.Cliente
+import com.example.psnotes.data.model.Material
 import com.example.psnotes.data.model.Trabajador
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -45,9 +46,9 @@ fun SplashScreen(
         ) {
             Image(
                 painter = (if (isSystemInDarkTheme()) {
-                    painterResource(id = R.drawable.pensisoft_logo_dark_theme)
-                } else {
                     painterResource(id = R.drawable.pensisoft_logo_light_theme)
+                } else {
+                    painterResource(id = R.drawable.pensisoft_logo_dark_theme)
                 }), contentDescription = "Logotipo de Pensisoft", contentScale = ContentScale.Inside
             )
             Text(
@@ -114,6 +115,30 @@ private suspend fun initializeData(appDatabase: AppDatabase) {
             coordenadasNegocio = "39.98096459203265, -0.028817101095514178"
         )
         appDatabase.clienteDao.insertClient(cliente)
+
+        val material1 = Material(
+            id = "",
+            nombre = "Abubalul",
+            tipo = "",
+            categoria = "",
+            precioUnitario = 250.0,
+            especificaciones = "",
+            fechaExpiracion = "",
+            estado = ""
+        )
+        appDatabase.materialDao.insertMaterial(material1)
+
+        val material2 = Material(
+            id = "",
+            nombre = "Abubacar",
+            tipo = "",
+            categoria = "",
+            precioUnitario = 250.0,
+            especificaciones = "",
+            fechaExpiracion = "",
+            estado = ""
+        )
+        appDatabase.materialDao.insertMaterial(material2)
 
         /*val nota = Nota(
             id = UUID.randomUUID().toString(),

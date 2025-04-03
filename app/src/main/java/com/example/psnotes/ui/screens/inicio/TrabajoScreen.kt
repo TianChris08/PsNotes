@@ -24,7 +24,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 import java.util.Locale
 
@@ -39,7 +43,6 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(2.dp)
     ) {
         item {
             Row(
@@ -48,7 +51,11 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                 horizontalArrangement = Arrangement.Center
             )
             {
-                Text("Trabajo")
+                Text(
+                    text = "Trabajo",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
             }
 
             HorizontalDivider()

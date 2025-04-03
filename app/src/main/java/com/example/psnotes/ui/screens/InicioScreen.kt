@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -178,15 +179,36 @@ fun InicioScreen(
 
 
 
-        val colorFondo = colorScheme.tertiary.copy(alpha = 0.5f)
+        val colorFondo = colorScheme.tertiary.copy(alpha = 0.7f)
 
         // 🔹 Parte Media - Contenido Dinámico
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.60f)
-                .background(color = colorFondo, shape = RectangleShape)
+                .background(
+                    color = colorFondo,
+                    shape = RectangleShape)
         ) {
+            // 🔹 Botones de Cambio
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.2f),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.Start
+            ) {
+                listOf(
+                    Icons.Outlined.WorkOutline to "trabajo",
+                    Icons.Outlined.Router to "materiales",
+                    Icons.Outlined.NoteAlt to "observaciones1",
+                    Icons.Outlined.NoteAlt to "observaciones2",
+                    Icons.Outlined.TextFormat to "firma"
+                ).forEach { (icon, text) ->
+                    BotonLateral(Modifier.weight(1f), selectedSection, icon, text)
+                }
+            }
+            //Seccion dinamica
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -196,32 +218,13 @@ fun InicioScreen(
                 when (selectedSection.value) {
                     "trabajo" -> TrabajoScreen(trabajoViewModel)
                     "materiales" -> MaterialesScreen(viewModelMaterial)
-                    "firma" -> FirmaScreen()
                     "observaciones1" -> Observaciones1Screen()
                     "observaciones2" -> Observaciones2Screen()
-                }
-            }
-            // 🔹 Botones de Cambio
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(0.2f),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.End
-            ) {
-                listOf(
-                    Icons.Outlined.WorkOutline to "trabajo",
-                    Icons.Outlined.Router to "materiales",
-                    Icons.Outlined.TextFormat to "firma",
-                    Icons.Outlined.NoteAlt to "observaciones1",
-                    Icons.Outlined.NoteAlt to "observaciones2"
-                ).forEach { (icon, text) ->
-                    BotonLateral(Modifier.weight(1f), selectedSection, icon, text)
+                    "firma" -> FirmaScreen()
                 }
             }
         }
 
-        HorizontalDivider(color = colorScheme.secondary)
 
         // 🔹 Parte Baja - Información final y botón crear nota
         Row(
@@ -230,10 +233,10 @@ fun InicioScreen(
                 .weight(0.15f)
                 .background(colorScheme.surface)
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            Row (
+                modifier = Modifier.fillMaxSize().padding(15.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(horizontalArrangement = Arrangement.Center) {
                     /*Text(
@@ -252,7 +255,7 @@ fun InicioScreen(
                 Button(
                     colors = ButtonColors(
                         containerColor = colorScheme.tertiary,
-                        contentColor = colorScheme.onBackground,
+                        contentColor = Color.Black,
                         disabledContainerColor = colorScheme.surfaceVariant,
                         disabledContentColor = colorScheme.onSurfaceVariant
                     ),
@@ -292,7 +295,6 @@ fun InicioScreen(
                 ) {
                     Text(
                         text = "Guardar Nota",
-                        color = colorScheme.background,
                         fontWeight = FontWeight.Bold
                     )
                 }

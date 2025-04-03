@@ -1,16 +1,18 @@
 package com.example.psnotes.ui.viewmodel
 
+import android.system.Os.remove
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.psnotes.data.model.Material
 import com.example.psnotes.data.repository.MaterialDAO
-import com.example.psnotes.data.state.MaterialState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,10 +22,14 @@ import kotlinx.coroutines.launch
 class MaterialViewModel(
     private val dao: MaterialDAO
 ) : ViewModel() {
+    var gestionarMaterialesdesplegado by mutableStateOf(false)
+    var nuevoMaterialdesplegado by mutableStateOf(false)
+
+
     var materialesState by mutableStateOf(emptyList<Material>())
         private set
 
-    var materialesSeleccionadosState = mutableMapOf<String, Int>()
+    var materialesSeleccionadosState by mutableStateOf((emptyMap<String, Int>()))
         private set
 
     var materialesFiltradosState by mutableStateOf(emptyList<Material>())
@@ -96,18 +102,18 @@ class MaterialViewModel(
 
     fun addMaterialSeleccionado(nombre: String) {
         materialesSeleccionadosState = materialesSeleccionadosState.toMutableMap().apply {
-                this[nombre] = 0 // Añadir con cantidad 0
+            this[nombre] = 0 // Añadir con cantidad 0
         }
     }
 
     fun updateMaterialQuantity(nombre: String, quantity: Int) {
         materialesSeleccionadosState = materialesSeleccionadosState.toMutableMap().apply {
-                this[nombre] = quantity
+            this[nombre] = quantity
         }
     }
 
     fun removeMaterialSeleccionado(nombre: String) {
-        materialesSeleccionadosState= materialesSeleccionadosState.toMutableMap().apply {
+        materialesSeleccionadosState = materialesSeleccionadosState.toMutableMap().apply {
             remove(nombre)
         }
     }
