@@ -10,12 +10,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,7 +21,7 @@ import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
 @Composable
 fun Observaciones1Screen(viewModel: ObservacionesViewModel = viewModel()) {
 
-    val observacionesPublicas by viewModel.observacionesPublicas.collectAsState()
+    val observacionesPublicas = viewModel.observacionesPublicas
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(

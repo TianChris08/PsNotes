@@ -17,28 +17,21 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import java.util.Locale
 
 @Composable
 fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
 
     val tiempoTrabajado by trabajoViewModel.tiempoTrabajado.collectAsState()
-    var trabajoRealizado by rememberSaveable { mutableStateOf(trabajoViewModel.trabajoRealizado.value) }
+    var trabajoRealizado = trabajoViewModel.trabajoRealizado
     val precioEstimado by trabajoViewModel.precioManoDeObra.collectAsState()
     val tarifaPorHora = trabajoViewModel.tarifaPorHora.collectAsState().value
 
@@ -87,7 +80,7 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                 TextField(
                     value = trabajoRealizado,
                     onValueChange = {
-                        trabajoRealizado = it
+                        trabajoViewModel.onTrabajoRealizadoChange(it)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

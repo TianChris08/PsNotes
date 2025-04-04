@@ -1,6 +1,5 @@
 package com.example.psnotes.ui.viewmodel
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +18,8 @@ class TrabajoViewModel : ViewModel() {
     private val _tiempoTrabajado = MutableStateFlow(0)
     val tiempoTrabajado: StateFlow<Int> = _tiempoTrabajado.asStateFlow()
 
-    var trabajoRealizado = mutableStateOf("")
+    var trabajoRealizado by mutableStateOf("")
+        private set
 
     private val _precioManoDeObra = MutableStateFlow(0.0)
     val precioManoDeObra: StateFlow<Double> = _precioManoDeObra.asStateFlow()
@@ -51,6 +51,10 @@ class TrabajoViewModel : ViewModel() {
 
     private fun actualizarPrecio() {
         _precioManoDeObra.value = (_tiempoTrabajado.value / 60.0) * _tarifaPorHora.value
+    }
+
+    fun onTrabajoRealizadoChange(nuevoValor: String) {
+        trabajoRealizado = nuevoValor
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.psnotes
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.psnotes.data.AppDatabaseSingleton
 import com.example.psnotes.ui.components.BottomBar
 import com.example.psnotes.ui.screens.InicioScreen
 import com.example.psnotes.ui.screens.InicioSesion
@@ -29,6 +27,7 @@ import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
 import com.example.psnotes.ui.viewmodel.PermissionViewModel
 import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
+import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 
 class MainActivity : ComponentActivity() {
     lateinit var permissionViewModel: PermissionViewModel
@@ -99,6 +98,14 @@ class MainActivity : ComponentActivity() {
                     }
                 })
 
+                val viewModelTrabajo by viewModels<TrabajoViewModel>(factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return TrabajoViewModel() as T
+                        }
+                    }
+                })
+
 
                 Scaffold(
                     bottomBar = {
@@ -119,7 +126,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("Inicio") {
-                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente, viewModelNota, viewModelObservaciones, viewModelTrabajador, context)
+                            InicioScreen(paddingValues, viewModelMaterial, viewModelCliente, viewModelNota, viewModelObservaciones, viewModelTrabajo, context)
                         }
                         composable("Buscar") {
                             MapScreen(context, paddingValues, clienteDao)

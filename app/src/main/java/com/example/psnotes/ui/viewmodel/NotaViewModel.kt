@@ -22,6 +22,9 @@ class NotaViewModel(
     var errorGeneral by mutableStateOf<String?>(null)
         private set
 
+    var personaContacto by mutableStateOf("")
+        private set
+
     init {
         viewModelScope.launch {
             try {
@@ -58,5 +61,9 @@ class NotaViewModel(
             }
         }
         return resultado
+    }
+
+    fun onPersonaContactoChange(nuevoValor: String) {
+        personaContacto = nuevoValor
     }
 }

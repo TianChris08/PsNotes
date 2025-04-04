@@ -1,23 +1,23 @@
 package com.example.psnotes.ui.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class ObservacionesViewModel : ViewModel() {
 
-    private var _observacionesPublicas = MutableStateFlow("")
-    val observacionesPublicas: StateFlow<String> = _observacionesPublicas.asStateFlow()
+    var observacionesPublicas by mutableStateOf("")
+        private set
 
-    private var _observacionesPrivadas = MutableStateFlow("")
-    val observacionesPrivadas: StateFlow<String> = _observacionesPrivadas.asStateFlow()
+    var observacionesPrivadas by mutableStateOf("")
+        private set
 
     fun actualizarObservacionesPublicas(nuevaObservacion: String) {
-        _observacionesPublicas.value = nuevaObservacion
+        observacionesPublicas = nuevaObservacion
     }
 
     fun actualizarObservacionesPrivadas(nuevaObservacion: String) {
-        _observacionesPrivadas.value = nuevaObservacion
+        observacionesPrivadas = nuevaObservacion
     }
 }

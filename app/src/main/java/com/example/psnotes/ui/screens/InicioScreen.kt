@@ -17,7 +17,6 @@ import androidx.compose.material.icons.outlined.TextFormat
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -48,7 +47,6 @@ import com.example.psnotes.ui.viewmodel.ClienteViewModel
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 import com.example.psnotes.ui.viewmodel.NotaViewModel
 import com.example.psnotes.ui.viewmodel.ObservacionesViewModel
-import com.example.psnotes.ui.viewmodel.TrabajadorViewModel
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
 import com.google.android.libraries.places.api.Places
 import java.time.LocalDate
@@ -63,22 +61,20 @@ fun InicioScreen(
     clienteViewModel: ClienteViewModel = viewModel(),
     notaViewModel: NotaViewModel = viewModel(),
     observacionesViewModel: ObservacionesViewModel = viewModel(),
-    trabajadorViewModel: TrabajadorViewModel = viewModel(),
+    trabajoViewModel: TrabajoViewModel = viewModel(),
     context: Context
 ) {
-    val trabajoViewModel: TrabajoViewModel = viewModel()
-
     var clienteId by remember { mutableStateOf<String?>("") }
-    var personaContacto by remember { mutableStateOf("") }
+    var personaContacto = notaViewModel.personaContacto
 
     val precioMateriales = viewModelMaterial.sumarPrecioMateriales()
     val precioManoDeObra by trabajoViewModel.precioManoDeObra.collectAsState()
 
     val selectedSection = remember { mutableStateOf("trabajo") }
 
-    val observacionesPublicas by observacionesViewModel.observacionesPublicas.collectAsState()
-    val observacionesPrivadas by observacionesViewModel.observacionesPrivadas.collectAsState()
-    val trabajoRealizado by trabajoViewModel.trabajoRealizado
+    val observacionesPublicas = observacionesViewModel.observacionesPublicas
+    val observacionesPrivadas = observacionesViewModel.observacionesPrivadas
+    val trabajoRealizado = trabajoViewModel.trabajoRealizado
 
 
 
@@ -160,7 +156,7 @@ fun InicioScreen(
                 ) {
                     TextField(
                         value = personaContacto,
-                        onValueChange = { personaContacto = it },
+                        onValueChange = { notaViewModel.onPersonaContactoChange(it) },
                         label = { Text("Persona de contacto") }
                     )
                 }
@@ -218,8 +214,8 @@ fun InicioScreen(
                 when (selectedSection.value) {
                     "trabajo" -> TrabajoScreen(trabajoViewModel)
                     "materiales" -> MaterialesScreen(viewModelMaterial)
-                    "observaciones1" -> Observaciones1Screen()
-                    "observaciones2" -> Observaciones2Screen()
+                    "observaciones1" -> Observaciones1Screen(observacionesViewModel)
+                    "observaciones2" -> Observaciones2Screen(observacionesViewModel)
                     "firma" -> FirmaScreen()
                 }
             }
