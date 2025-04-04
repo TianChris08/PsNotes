@@ -150,7 +150,6 @@ fun InicioScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 8.dp)
                         .weight(0.5f),
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -209,7 +208,7 @@ fun InicioScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(0.8f)
-                    .padding(12.dp)
+                    .padding(vertical = 12.dp)
             ) {
                 when (selectedSection.value) {
                     "trabajo" -> TrabajoScreen(trabajoViewModel)

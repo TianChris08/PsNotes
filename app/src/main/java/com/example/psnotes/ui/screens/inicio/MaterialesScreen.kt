@@ -1,27 +1,15 @@
 package com.example.psnotes.ui.screens.inicio
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -29,24 +17,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.psnotes.ui.components.EmergenteGestionarMateriales
+import com.example.psnotes.ui.components.NuevaLineaForm
 import com.example.psnotes.ui.viewmodel.MaterialViewModel
 
-@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun MaterialesScreen(materialViewModel: MaterialViewModel) {
     // Observar los materiales del ViewModel
-    val materialesState by remember { derivedStateOf { materialViewModel.materialesState } }
-    val materialesSeleccionados by remember { derivedStateOf { materialViewModel.materialesSeleccionadosState } }
+    val materialesState by remember { derivedStateOf { materialViewModel.listaTodosMateriales } }
+    val materialesSeleccionados by remember { derivedStateOf { materialViewModel.mapaMaterialesSeleccionados } }
 
     val searchText by remember { mutableStateOf("") }
-    val gestionarMaterialesdesplegado = materialViewModel.gestionarMaterialesdesplegado
+    //val gestionarMaterialesdesplegado = materialViewModel.gestionarMaterialesdesplegado
+    var nuevaLineaForm = materialViewModel.nuevaLineaForm
 
     var selectedMaterials by remember { mutableStateOf(mutableMapOf<String, Int>()) }
 
@@ -61,7 +48,32 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
         }
     }
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End) {
+            Button(
+                modifier = Modifier.padding(horizontal = 3.dp),
+                onClick = {}
+            ) {
+                Text("Edit")
+            }
+            Button(
+                modifier = Modifier.padding(horizontal = 3.dp),
+                onClick = {}
+            ) {
+                Text("-")
+            }
+            Button(
+                modifier = Modifier.padding(horizontal = 3.dp),
+                onClick = {
+                    materialViewModel.nuevaLineaForm = true
+                }
+            ) {
+                Text("+")
+            }
+        }
+        HorizontalDivider()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,17 +93,81 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            Button(
+            /*Button(
                 onClick = { materialViewModel.gestionarMaterialesdesplegado = true }
             ) {
                 Text("Gestionar Materiales")
-            }
+            }*/
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            // Encabezado de la tabla
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Nombre",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "Unidades",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "Precio",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "Importe",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            // Divisor entre encabezado y datos
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+            // Filas de datos
+            materialesSeleccionados.forEach { (material, quantity) ->
+                val precioMaterial = materialViewModel.calcularPrecioSegunCantidad(material, quantity)
+                val importe = precioMaterial * quantity
+                Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                    Text(
+                        text = material,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "$quantity",
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "%.2f €".format(precioMaterial),
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "%.2f €".format(importe),
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
+
         // Lista de materiales seleccionados con sus cantidades
-        LazyColumn {
+        /*LazyColumn {
             itemsIndexed(materialesSeleccionados.toList()) { index, (material, quantity) ->
                 Row(
                     modifier = Modifier
@@ -173,7 +249,7 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                     }
                 }
             }
-        }
+        }*/
 
 
         /*if (showDialog) {
@@ -187,10 +263,10 @@ fun MaterialesScreen(materialViewModel: MaterialViewModel) {
                 }
             )
         }*/
-        if (gestionarMaterialesdesplegado) {
-            EmergenteGestionarMateriales(
+        if (nuevaLineaForm) {
+            NuevaLineaForm(
                 materialesViewModel = materialViewModel,
-                onDismiss = { materialViewModel.gestionarMaterialesdesplegado = false }
+                onDismiss = { materialViewModel.nuevaLineaForm = false }
             )
         }
     }
