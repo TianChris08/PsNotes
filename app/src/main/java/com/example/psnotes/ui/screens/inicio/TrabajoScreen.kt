@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,12 +25,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.psnotes.ui.viewmodel.TrabajoViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.Locale
 
 @Composable
@@ -86,7 +88,6 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                     value = trabajoRealizado,
                     onValueChange = {
                         trabajoRealizado = it
-                        trabajoViewModel.trabajoRealizado.value = it
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -110,7 +111,7 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(20.dp),
+                        .height(30.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -118,10 +119,11 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                         onClick = {
                             trabajoViewModel.decrementarTiempo()
                         },
-                        modifier = Modifier
-                            .weight(1f)
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "-", style = typography.titleMedium)
+                        Text(text = "-",
+                            style = typography.titleMedium,
+                            fontSize = 25.sp)
                     }
                     Text(
                         text = "$tiempoTrabajado min",
@@ -133,10 +135,11 @@ fun TrabajoScreen(trabajoViewModel: TrabajoViewModel) {
                         onClick = {
                             trabajoViewModel.incrementarTiempo()
                         },
-                        modifier = Modifier
-                            .weight(1f)
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "+", style = typography.titleMedium)
+                        Text(text = "+",
+                            style = typography.titleMedium,
+                            fontSize = 25.sp)
                     }
                 }
             }

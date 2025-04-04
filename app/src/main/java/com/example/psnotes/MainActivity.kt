@@ -122,10 +122,10 @@ class MainActivity : ComponentActivity() {
                             InicioScreen(paddingValues, viewModelMaterial, viewModelCliente, viewModelNota, viewModelObservaciones, viewModelTrabajador, context)
                         }
                         composable("Buscar") {
-                            MapScreen(paddingValues, clienteDao)
+                            MapScreen(context, paddingValues, clienteDao)
                         }
                         composable("Notas") {
-                            NotasScreen(paddingValues, viewModelNota, viewModelCliente)
+                            NotasScreen(context, paddingValues, viewModelNota, viewModelCliente)
                         }
                         composable("Perfil") {
                             PerfilScreen(context, navController)

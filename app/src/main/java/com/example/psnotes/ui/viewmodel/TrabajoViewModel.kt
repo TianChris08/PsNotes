@@ -1,6 +1,9 @@
 package com.example.psnotes.ui.viewmodel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 class TrabajoViewModel : ViewModel() {
 
-    private var _tiempoTrabajado = MutableStateFlow(0)
+    private val _tiempoTrabajado = MutableStateFlow(0)
     val tiempoTrabajado: StateFlow<Int> = _tiempoTrabajado.asStateFlow()
 
     var trabajoRealizado = mutableStateOf("")
@@ -23,6 +26,10 @@ class TrabajoViewModel : ViewModel() {
 
     private val _tarifaPorHora = MutableStateFlow(10.0) // Tarifa por defecto (10€/h)
     val tarifaPorHora: StateFlow<Double> = _tarifaPorHora.asStateFlow()
+
+    fun actualizarTiempo(nuevoTiempo: Int) {
+        _tiempoTrabajado.value = nuevoTiempo
+    }
 
     fun incrementarTiempo() {
         viewModelScope.launch(Dispatchers.IO) {

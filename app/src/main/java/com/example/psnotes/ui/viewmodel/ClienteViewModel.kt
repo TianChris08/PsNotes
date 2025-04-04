@@ -69,7 +69,7 @@ class ClienteViewModel(
     fun buscarClientePorId(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (id != "nulo") {
-                val cliente = dao.getClientePorId(id) // Asegúrate de que devuelve un objeto Cliente
+                val cliente = dao.getClientePorId(id)
                 withContext(Dispatchers.Main) {
                     _nombreCliente.value = cliente.commercialName
                 }
